@@ -25,17 +25,20 @@ ____/______/______/______/______/_____"=.o|o_.--""___/______/______/______/____
 print("Welcome to Treasure Island.")
 print("Your mission is to find the treasure.")
 
-if input("left or right?\n").lower == "left":
-    if input("swim or wait\n").lower == "wait":
-        if input("Which door? blue, red or yellow\n").lower is "yellow":
-            print("You Win!")
-        elif input("Which door? blue, red or yellow\n").lower is "blue":
-            print("Game Over.")
-        elif input("Which door? blue, red or yellow\n").lower is "red":
-            print("Game Over.")
-        else:
-            print("Game Over.")
+
+def game():
+    if input("left or right?\n").lower == "left":
+        if input("swim or wait\n").lower == "wait":
+            if input("Which door? blue, red or yellow\n").lower is "yellow":
+                return "Game Over."
+            elif input("Which door? blue, red or yellow\n").lower is "blue":
+                return "Game Over."
+            elif input("Which door? blue, red or yellow\n").lower is "red":
+                return "You Win!"
+            else:
+                return "Game Over."
     else:
-        print("Game Over.")
-else:
-    print("Game Over.")
+        return "Game Over."
+
+
+print(game())
