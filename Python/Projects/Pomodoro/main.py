@@ -6,8 +6,6 @@ clear = lambda: (
     os.system("cls") if platform.system() is "Windows" else os.system("clear")
 )
 bar_width = lambda: os.get_terminal_size().columns - 2
-clear()
-
 append_minute = lambda i: "s" if i > 119 else ""
 append_second = lambda i: "s" if i > 1 else ""
 
