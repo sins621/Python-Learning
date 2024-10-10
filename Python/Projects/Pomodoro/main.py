@@ -3,7 +3,7 @@ import time
 import platform
 
 clear = lambda: (
-    os.system("cls") if platform.system is "Windows" else os.system("clear")
+    os.system("cls") if platform.system() is "Windows" else os.system("clear")
 )
 bar_width = lambda: os.get_terminal_size().columns - 2
 clear()
