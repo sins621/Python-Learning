@@ -3,7 +3,7 @@ import time
 import platform
 
 clear = lambda: (
-    os.system("cls") if platform.system() is "Windows" else os.system("clear")
+    os.system("cls") if platform.system() == "Windows" else os.system("clear")
 )
 bar_width = lambda: os.get_terminal_size().columns - 2
 append_minute = lambda i: "s" if i > 119 else ""
@@ -22,7 +22,7 @@ def timer(seconds):
         plus_chars = "+" * int(bar_width() * progress_percent)
         minus_chars = "-" * int(bar_width() - len(plus_chars))
         print(f"[{plus_chars}{minus_chars}]")
-        time.sleep(0.10)
+        time.sleep(1)
         print("\x1B[1A\x1B[0K\x1B[1A\x1B[0K\x1B[1A")
 
 
@@ -45,7 +45,7 @@ break_seconds = minutes * 60
 
 working = "y"
 
-while working is "y":
+while working == "y":
     print("Working..")
     timer(split_seconds)
 
