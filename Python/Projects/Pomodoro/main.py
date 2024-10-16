@@ -26,6 +26,8 @@ def timer(seconds):
         print(f"[{plus_chars}{minus_chars}]")
         time.sleep(1)
         print("\x1B[1A\x1B[0K\x1B[1A\x1B[0K", end="")
+        if seconds % 60 == 0:
+            clear()
 
 
 def append_to_logfile(string, filename):
