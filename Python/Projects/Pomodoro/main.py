@@ -2,6 +2,8 @@ import os
 import time
 import platform
 
+from datetime import date
+
 clear = lambda: (
     os.system("cls") if platform.system() == "Windows" else os.system("clear")
 )
@@ -23,7 +25,18 @@ def timer(seconds):
         minus_chars = "-" * int(bar_width() - len(plus_chars))
         print(f"[{plus_chars}{minus_chars}]")
         time.sleep(1)
-        print("\x1B[1A\x1B[0K\x1B[1A\x1B[0K", end ="")
+        print("\x1B[1A\x1B[0K\x1B[1A\x1B[0K", end="")
+        if seconds % 60 == 0:
+            clear()
+
+
+def append_to_logfile(string, filename):
+    logfile = open(f"{filename}.txt", "a")
+    logfile.write(string)
+    logfile.close()
+
+def create_logfile():
+    f = open(f"{date.today()}.txt", "x")
 
 
 print(
@@ -33,6 +46,7 @@ print(
 --------------------------------------------------------\n
     """
 )
+
 
 minutes = int(
     input("How long would you like your working splits to be? (Minutes): \n")
