@@ -53,8 +53,4 @@ def game():
             print("Guess again.")
 
 
-
-
 game()
-
-
