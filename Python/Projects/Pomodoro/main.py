@@ -26,17 +26,17 @@ def timer(seconds):
         print(f"[{plus_chars}{minus_chars}]")
         time.sleep(1)
         print("\x1B[1A\x1B[0K\x1B[1A\x1B[0K", end="")
-        if seconds % 60 == 0:
-            clear()
+#         if seconds % 120 == 0:
+#             clear()
 
 
-def append_to_logfile(string, filename):
-    logfile = open(f"{filename}.txt", "a")
-    logfile.write(string)
-    logfile.close()
+# def append_to_logfile(string, filename):
+#     logfile = open(f"{filename}.txt", "a")
+#     logfile.write(string)
+#     logfile.close()
 
-def create_logfile():
-    f = open(f"{date.today()}.txt", "x")
+# def create_logfile():
+#     f = open(f"{date.today()}.txt", "x")
 
 
 print(
