@@ -1,7 +1,7 @@
 # Display art
 from art import logo, vs
 from game_data import data
-import random
+from random import choice
 
 
 def format_data(account):
@@ -12,7 +12,7 @@ def format_data(account):
     return f"{account_name}, a {account_descr}, from {account_country}"
 
 
-def check_answer(a_followers, b_followers):
+def check_answer(guess, a_followers, b_followers):
     """Take a user's guess and the follower counts and returns if they got it right."""
     if a_followers > b_followers:
         return guess == "a"
@@ -23,18 +23,18 @@ def check_answer(a_followers, b_followers):
 print(logo)
 score = 0
 game_should_continue = True
-# Generate a random account from the game data
-account_b = random.choice(data)
+# Generate a account from the game data
+account_b = choice(data)
 
 # Make the game repeatable.
 while game_should_continue:
 
     # Making account at position B become the next account at position A.
     account_a = account_b
-    account_b = random.choice(data)
+    account_b = choice(data)
 
     if account_a == account_b:
-        account_b = random.choice(data)
+        account_b = choice(data)
 
     print(f"Compare A: {format_data(account_a)}.")
     print(vs)
@@ -62,5 +62,3 @@ while game_should_continue:
     else:
         print(f"Sorry, that's wrong. Final score: {score}.")
         game_should_continue = False
-
-
