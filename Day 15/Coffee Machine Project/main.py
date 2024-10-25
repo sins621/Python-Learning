@@ -62,7 +62,7 @@ while machine_power == "on":
 
             total = user_total(user_coins)
             if total > MENU[coffee_option]["cost"]:
-                resources["money"] += total
+                resources["money"] += MENU[coffee_option]["cost"]
                 subtract_resources(resources, option_ingredients)
                 print(f"Here is your {coffee_option} ☕. Enjoy!")
             else:

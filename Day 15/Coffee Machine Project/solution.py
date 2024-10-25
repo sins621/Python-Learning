@@ -21,7 +21,7 @@ MENU = {
             "coffee": 24,
         },
         "cost": 3.0,
-    }
+    },
 }
 
 profit = 0
@@ -88,11 +88,3 @@ while is_on:
             payment = process_coins()
             if is_transaction_successful(payment, drink["cost"]):
                 make_coffee(choice, drink["ingredients"])
-
-
-
-
-
-
-
-
