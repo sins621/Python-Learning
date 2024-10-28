@@ -33,7 +33,6 @@ table.add_column(
         ]
     )
 
-table.align["Pokemon Name"] = "l"
-table.align["Type"] = "l"
+table.align= "l"
 
 print(table)
