@@ -1,6 +1,6 @@
 from turtle import Turtle, Screen
-from random import random,randint
 from snake import Snake
+from food import Food
 import time
 
 SCREEN_WIDTH = 600
@@ -34,11 +34,13 @@ def draw_screen():
 draw_screen()
 
 snake = Snake()
+food = Food(SCREEN_WIDTH, SCREEN_HEIGHT, GRID_DIVISION)
+food.create_food()
 screen.listen()
-screen.onkey(snake.up,"k")
-screen.onkey(snake.down,"j")
-screen.onkey(snake.left,"h")
-screen.onkey(snake.right,"l")
+screen.onkey(snake.up,"w")
+screen.onkey(snake.down,"s")
+screen.onkey(snake.left,"a")
+screen.onkey(snake.right,"d")
 
 while is_running:
     screen.update()
