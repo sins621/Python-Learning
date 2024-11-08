@@ -1,11 +1,16 @@
 from turtle import Turtle, Screen
 from snake import Snake
 from food import Food
+from scoreboard import Scoreboard
 import time
 
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 600
 GRID_DIVISION = 20
+LOSE_PADDING = 0
+LOSE_WIDTH = SCREEN_WIDTH//2 - LOSE_PADDING
+LOSE_HEIGHT = SCREEN_HEIGHT//2 - LOSE_PADDING
+
 squares = []
 is_running = True
 
@@ -34,8 +39,8 @@ def draw_screen():
 draw_screen()
 
 snake = Snake()
-food = Food(SCREEN_WIDTH, SCREEN_HEIGHT, GRID_DIVISION)
-food.create_food()
+food = Food()
+scoreboard = Scoreboard()
 screen.listen()
 screen.onkey(snake.up,"w")
 screen.onkey(snake.down,"s")
@@ -46,5 +51,19 @@ while is_running:
     screen.update()
     time.sleep(0.1)
     snake.move()
+
+    if snake.head.distance(food) < 15:
+        food.refresh()
+        snake.extend()
+        scoreboard.increase_score()
+
+    if snake.head.xcor() > LOSE_WIDTH or snake.head.xcor() < LOSE_WIDTH * -1 or snake.head.ycor() > LOSE_HEIGHT or snake.head.ycor() < LOSE_HEIGHT * -1:
+        is_running = False
+        scoreboard.game_over()
+
+    for square in snake.body[1:]:
+        if snake.head.distance(square) < 10:
+            is_running = False
+            scoreboard.game_over()
 
 screen.exitonclick()

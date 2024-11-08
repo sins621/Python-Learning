@@ -1,6 +1,9 @@
 from turtle import Turtle
 from random import randint
 
+STARTING_LENGTH = 6
+positions = [(0, 0)]
+
 class Snake:
     def __init__(self):
         self.body = []
@@ -14,15 +17,21 @@ class Snake:
         return hex
 
     def gen_snake(self):
-        for i in range(6):
-            square = Turtle(shape="square")
-            square.pu()
-            square.color(self.random_hex())
-            if len(self.body) == 0:
-                pass
-            else:
-                square.setx(self.body[i-1].xcor() - 20)
-            self.body.append(square)
+        for i in range(STARTING_LENGTH-1):
+            positions.append((-20, 0))
+
+        for position in positions:
+            self.add_segment(position)
+
+    def add_segment(self,position):
+        square = Turtle(shape="square")
+        square.pu()
+        square.color(self.random_hex())
+        square.goto(position)
+        self.body.append(square)
+
+    def extend(self):
+        self.add_segment(self.body[-1].position())
 
     def move(self):
         for i in range(len(self.body)-1, 0, -1):
