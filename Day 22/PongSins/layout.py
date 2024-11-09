@@ -5,10 +5,12 @@ SCREEN_WIDTH, SCREEN_HEIGHT = screen_dimensions["small"]
 
 LINE_AMOUNT = 10
 
+
 class Layout(Turtle):
     def __init__(self, screen: Screen):
         super().__init__()
         self.screen = screen
+        self.SCREEN_WIDTH, self.SCREEN_HEIGHT = screen_dimensions["small"]
         self.screen.setup(SCREEN_WIDTH, SCREEN_HEIGHT)
         self.screen.bgcolor("black")
         self.screen.tracer(0)
