@@ -36,7 +36,7 @@ while game_is_on:
 
     if player.ycor() > SCREEN_HEIGHT // 2 - FINISH_POS_OFFSET:
         scoreboard.increase_level()
-        player.goto(0, SCREEN_HEIGHT//-2 + 20)
+        player.goto(0, SCREEN_HEIGHT // -2 + 20)
 
     time.sleep(DELTA)
     screen.update()

@@ -3,6 +3,7 @@ from random import choice
 
 COLORS = ["red", "orange", "yellow", "green", "blue", "purple"]
 
+
 class Car(Turtle):
     def __init__(self, x_pos, y_pos, speed):
         super().__init__()
