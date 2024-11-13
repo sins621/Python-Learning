@@ -1,6 +1,8 @@
 from turtle import Turtle
 
-SPEED = 10
+velocity = 10
+direction = [1,0]
+COL_ANGLE = 0.1
 
 class Ball(Turtle):
     def __init__(self):
@@ -8,23 +10,39 @@ class Ball(Turtle):
         self.pu()
         self.shape("circle")
         self.color("white")
-        self.setheading(0)
+        self.direction = direction
+        self.velocity = velocity
 
-    def hor_collision(self, paddle_ycor, paddle_dis):
-        self.setheading((self.heading() - 180) * -1)
+    def move(self):
+        new_direction = [i * self.velocity for i in self.direction]
+        self.setpos(self.pos() + new_direction)
 
-        if self.heading() < 90 or self.heading() > 270:
-            if self.ycor() > paddle_ycor:
-                self.setheading(self.heading() + paddle_dis//4)
-            else:
-                self.setheading(self.heading() - paddle_dis//4)
+    def new_round(self):
+        self.setpos(0,0)
+        self.direction = [-1,0]
+        self.velocity = velocity
 
+    def paddle_col(self, seg_num, player_num):
+        if player_num == 1:
+            self.direction[0] = 1
+        if player_num == 2:
+            self.direction[0] = -1
+
+        if seg_num == 4:
+            self.direction[1] = COL_ANGLE*2
+        elif seg_num == 3:
+            self.direction[1] = COL_ANGLE
+        elif seg_num == 1:
+            self.direction[1] = -COL_ANGLE
+        elif seg_num == 0:
+            self.direction[1] = -COL_ANGLE*2
         else:
-            if self.ycor() > paddle_ycor:
-                self.setheading(self.heading() - paddle_dis//4)
-            else:
-                self.setheading(self.heading() + paddle_dis//4)
+            self.direction[1] = 0
 
-    def ver_collision(self):
+
+    def wall_col(self):
+        self.direction[1] *= -1
+
+    def is_out_of_bounds(self):
         pass
 
