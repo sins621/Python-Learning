@@ -77,13 +77,13 @@ nr_numbers = int(input(f"How many numbers would you like?\n"))
 
 password_list = []
 
-for i in range(0,nr_letters):
+for i in range(0, nr_letters):
     password_list += random.choice(letters)
 
-for i in range(0,nr_symbols):
+for i in range(0, nr_symbols):
     password_list += random.choice(symbols)
 
-for i in range(0,nr_numbers):
+for i in range(0, nr_numbers):
     password_list += random.choice(numbers)
 
 random.shuffle(password_list)

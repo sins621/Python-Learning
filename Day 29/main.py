@@ -1,8 +1,120 @@
 from tkinter import *
+from tkinter import messagebox
+from random import randint, choice, shuffle
+import pyperclip
+
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
+def gen_password():
+    letters = [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f",
+        "g",
+        "h",
+        "i",
+        "j",
+        "k",
+        "l",
+        "m",
+        "n",
+        "o",
+        "p",
+        "q",
+        "r",
+        "s",
+        "t",
+        "u",
+        "v",
+        "w",
+        "x",
+        "y",
+        "z",
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "N",
+        "O",
+        "P",
+        "Q",
+        "R",
+        "S",
+        "T",
+        "U",
+        "V",
+        "W",
+        "X",
+        "Y",
+        "Z",
+    ]
+    numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    symbols = ["!", "#", "$", "%", "&", "(", ")", "*", "+"]
+
+    nr_letters = randint(8,10)
+    nr_symbols = randint(2,4)
+    nr_numbers = randint(2,4)
+
+    password_list = []
+    for char in range(0, nr_letters):
+        password_list.append(choice(letters))
+
+    for char in range(0, nr_symbols):
+        password_list.append(choice(symbols))
+
+    for char in range(0, nr_numbers):
+        password_list.append(choice(numbers))
+
+    shuffle(password_list)
+
+    password = ""
+    for char in password_list:
+        password += char
+
+    pyperclip.copy(password)
+    password_entry.delete(0, END)
+    password_entry.insert(0, password)
+
+
 # ---------------------------- SAVE PASSWORD ------------------------------- #
+
+
+def save():
+    website = website_entry.get()
+    mail = mail_user_entry.get()
+    password = password_entry.get()
+
+    if len(website) == 0 or len(mail) == 0 or len(password) == 0:
+        messagebox.showerror(
+            title="Oops..", message="Please don't leave any fields empty!"
+        )
+    else:
+        is_ok = messagebox.askokcancel(
+            title=website,
+            message=f"These are the details entered: \nEmail: {mail}"
+            f"\nPassword: {password}\nIs it ok save?",
+        )
+
+        if is_ok:
+            with open("./Day 29/passwords.txt", mode="a") as passwords:
+                passwords.write(f"{website} | {mail} | {password}\n")
+            website_entry.delete(0, END)
+            password_entry.delete(0, END)
+            website_entry.focus()
+
 
 # ---------------------------- UI SETUP ------------------------------- #
 
@@ -25,18 +137,20 @@ password_label = Label(text="Password:")
 password_label.grid(row=3, column=0)
 
 website_entry = Entry(width=45)
+website_entry.focus()
 website_entry.grid(row=1, column=1, columnspan=2)
 
 mail_user_entry = Entry(width=45)
+mail_user_entry.insert(0, "bradlycarpenterza@gmail.com")
 mail_user_entry.grid(row=2, column=1, columnspan=2)
 
-gen_pass_button = Button(text="Generate Password")
+gen_pass_button = Button(text="Generate Password", command=gen_password)
 gen_pass_button.grid(row=3, column=2)
 
 password_entry = Entry(width=25)
 password_entry.grid(row=3, column=1)
 
-add_pass_button = Button(text="Add", width=42)
+add_pass_button = Button(text="Add", width=42, command=save)
 add_pass_button.grid(row=4, column=1, columnspan=2)
 
 
