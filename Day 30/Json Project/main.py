@@ -8,6 +8,26 @@ import json
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
 
+def find_password():
+    website = website_entry.get()
+    try:
+        with open("./Day 30/Json Project/passwords.json", mode="r") as passwords:
+            data = json.load(passwords)
+            if website in data:
+                mail = data[website]["email"]
+                password = data[website]["password"]
+                messagebox.showinfo(
+                    title=website, message=f"Email: {mail}\nPassword: {password}"
+                )
+            else:
+                messagebox.showerror(
+                    title="Error", message=f"{website} Not Found in Database"
+                )
+
+    except FileNotFoundError:
+        messagebox.showerror(title="Error", message="No Data File Found")
+
+
 def gen_password():
     letters = [
         "a",
@@ -142,9 +162,9 @@ mail_user_label.grid(row=2, column=0)
 password_label = Label(text="Password:")
 password_label.grid(row=3, column=0)
 
-website_entry = Entry(width=45)
+website_entry = Entry(width=25)
 website_entry.focus()
-website_entry.grid(row=1, column=1, columnspan=2)
+website_entry.grid(row=1, column=1)
 
 mail_user_entry = Entry(width=45)
 mail_user_entry.insert(0, "bradlycarpenterza@gmail.com")
@@ -159,5 +179,7 @@ password_entry.grid(row=3, column=1)
 add_pass_button = Button(text="Add", width=42, command=save)
 add_pass_button.grid(row=4, column=1, columnspan=2)
 
+search_button = Button(text="Search", width=16, command=find_password)
+search_button.grid(row=1, column=2)
 
 wn.mainloop()
