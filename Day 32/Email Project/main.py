@@ -9,7 +9,7 @@ with open(f"{PATH}/quotes.txt") as quote_file:
     quote = choice(quotes)
 
 my_email = "fl0586114@gmail.com"
-my_password = "rukunkpiyccilgxw"
+my_password = ""
 
 
 def send_quote(quote):
