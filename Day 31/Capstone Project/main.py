@@ -6,7 +6,6 @@ import pandas
 BACKGROUND_COLOR = "#B1DDC6"
 PATH = "./Day 31/Capstone Project/"
 DELAY_SEC = 3
-timer = None
 index = None
 
 try:
@@ -20,7 +19,7 @@ except FileNotFoundError as error:
     messagebox.showerror(title="No File", message="Word Database Not Found")
 
 
-def gen_word():
+def next_card():
     global index
 
     if len(word_dict["French"]) == 0:
@@ -28,36 +27,33 @@ def gen_word():
     else:
         index = randint(0, len(word_dict["French"]) - 1)
         french_word = word_dict["French"][index]
-        canvas.itemconfig(word_text, text=french_word)
-        canvas.itemconfig(lang_text, text="French")
+        canvas.itemconfig(word_text, text=french_word, fill="black")
+        canvas.itemconfig(lang_text, text="French", fill="black")
         canvas.itemconfig(canvas_image, image=front_image)
         count_down(3)
 
 
-def display_answer():
+def flip_card():
     english_word = word_dict["English"][index]
     canvas.itemconfig(canvas_image, image=back_image)
-    canvas.itemconfig(word_text, text=english_word)
-    canvas.itemconfig(lang_text, text="English")
+    canvas.itemconfig(word_text, text=english_word, fill="white")
+    canvas.itemconfig(lang_text, text="English", fill="white")
 
 
 def count_down(count):
     if count > 0:
-        global timer
-        timer = wn.after(1000, count_down, count - 1)
+        wn.after(1000, count_down, count - 1)
     else:
-        display_answer()
+        flip_card()
 
 
-def correct_guess():
+def is_known():
     if index is not None:
-        del word_dict["French"][index]
-        del word_dict["English"][index]
+        del word_dict["French"][index], word_dict["English"][index]
         word_data = pandas.DataFrame.from_dict(word_dict)
-        # word_data.to_csv(f"{PATH}/data/words_to_learn.csv")
         word_data.to_csv(f"{PATH}/data/words_to_learn.csv", mode="w", index=False)
 
-    gen_word()
+    next_card()
 
 
 wn = Tk()
@@ -74,7 +70,11 @@ word_text = canvas.create_text(400, 263, text="test", font=("Ariel", 60, "bold")
 
 wrong_image = PhotoImage(file=f"{PATH}/images/wrong.png")
 no_button = Button(
-    image=wrong_image, bg=BACKGROUND_COLOR, highlightthickness=0, bd=0, command=gen_word
+    image=wrong_image,
+    bg=BACKGROUND_COLOR,
+    highlightthickness=0,
+    bd=0,
+    command=next_card,
 )
 no_button.grid(row=1, column=0)
 
@@ -84,10 +84,10 @@ yes_button = Button(
     bg=BACKGROUND_COLOR,
     highlightthickness=0,
     bd=0,
-    command=correct_guess,
+    command=is_known,
 )
 yes_button.grid(row=1, column=1)
 
-gen_word()
+next_card()
 
 wn.mainloop()
