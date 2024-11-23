@@ -2,7 +2,8 @@ import pandas
 import datetime as dt
 from random import randint, choice
 
-birthday_dict = None
+birthday_list = []
+letter = []
 
 PATH = "./Day 32/Birthday Wisher/"
 
@@ -11,7 +12,7 @@ try:
 except:
     print("FileNotFound")
 else:
-    birthday_dict = birthday_data.to_dict(orient="records")
+    birthday_list = birthday_data.to_dict(orient="records")
 
 rand_letter_num = randint(1, 3)
 letter_path = f"{PATH}letter_templates/letter_{rand_letter_num}.txt"
@@ -21,6 +22,14 @@ try:
         letter = letter_file.readlines()
 except:
     print("Letter not Found")
+
+for contact in birthday_list:
+    new_string = ""
+    for line in letter:
+        new_line = line.replace("[NAME]",f"{contact[0]["name"]}")
+        new_string += new_line
+    print(new_string)
+
 
 # for name in names:
 #     new_string = ""
