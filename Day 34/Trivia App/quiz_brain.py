@@ -19,10 +19,8 @@ class QuizBrain:
         correct_answer = self.current_question.answer
         if user_answer == correct_answer:
             self.score += 1
-            print("You got it right!")
             return True
         else:
-            print("That's wrong.")
             return False
 
         print(f"Your current score is: {self.score}/{self.question_number}")

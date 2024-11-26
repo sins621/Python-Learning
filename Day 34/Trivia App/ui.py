@@ -56,9 +56,17 @@ class QuizInterface:
         self.give_feedback(self.quiz_brain.check_answer("False"))
 
     def get_next_question(self):
-        q_text = self.quiz_brain.next_question()
         self.canvas.config(bg="white")
-        self.canvas.itemconfig(self.question_text, text=q_text)
+        if self.quiz_brain.still_has_questions():
+            q_text = self.quiz_brain.next_question()
+            self.score_label.config(text=f"Score: {self.quiz_brain.score}")
+            self.canvas.itemconfig(self.question_text, text=q_text)
+        else:
+            self.canvas.itemconfig(
+                self.question_text, text="You've reached the end of the quiz."
+            )
+            self.true_button.config(state="disabled")
+            self.false_button.config(state="disabled")
 
     def give_feedback(self, is_right):
         if is_right:
