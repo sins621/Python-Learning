@@ -1,0 +1,45 @@
+{
+  "status": "ok",
+  "totalResults": 3,
+  "articles": [
+    {
+      "source": {
+        "id": "the-wall-street-journal",
+        "name": "The Wall Street Journal"
+      },
+      "author": "Susan Pulliam, Emily Glazer, Becky Peterson",
+      "title": "As Musk Assumes Deregulation Role, Tesla Racks Up Pollution Violations",
+      "description": "Texas Gigafactory ran afoul of environmental overseers; a faulty furnace door and hazardous wastewater",
+      "url": "https://www.wsj.com/business/autos/elon-musk-tesla-environment-1263cd60?mod=hp_lead_pos1",
+      "urlToImage": "https://images.wsj.net/im-50512679/social",
+      "publishedAt": "2024-11-25T02:00:00Z",
+      "content": "Elon Musk made big promises to Wall Street about TeslasTSLA3.80%increase; green up pointing triangle\r\nnew Model Y SUV in 2022, and the company was ramping up its production in Austin, Texas, when env\u2026 [+531 chars]"
+    },
+    {
+      "source": {
+        "id": "the-washington-post",
+        "name": "The Washington Post"
+      },
+      "author": "Elizabeth Dwoskin, Jeff Stein, Jacob Bogage, Faiz Siddiqui",
+      "title": "Musk and Ramaswamy race to build a \u2018DOGE\u2019 team for war with Washington",
+      "description": "The Tesla executive and the former presidential candidate are meeting with staff and interviewing experts as they plan for massive federal cuts.",
+      "url": "https://www.washingtonpost.com/business/2024/11/24/musk-ramaswamy-doge-trump/",
+      "urlToImage": "https://www.washingtonpost.com/wp-apps/imrs.php?src=https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/J54VI4C6N7VL25Y6HGXLAPNAUQ_size-normalized.JPG&w=1440",
+      "publishedAt": "2024-11-24T23:28:03Z",
+      "content": "Elon Musk and Vivek Ramaswamy are interviewing job candidates and seeking advice from experts in Washington and Silicon Valley pushing a sweeping vision for the Department of Government Efficiency pa\u2026 [+502 chars]"
+    },
+    {
+      "source": {
+        "id": "next-big-future",
+        "name": "Next Big Future"
+      },
+      "author": "Brian Wang",
+      "title": "Five Unmanned SpaceX Starships to Mars in 2026 with Thousands of Teslabots | NextBigFuture.com",
+      "description": "Elon Musk has said that SpaceX will send five unmanned Starships to Mars in 2026. The launch window is about October 2024 to January 2025.",
+      "url": "https://www.nextbigfuture.com/2024/11/five-unmanned-spacex-starships-to-mars-in-2026-with-thousands-of-teslabots.html",
+      "urlToImage": "https://nextbigfuture.s3.amazonaws.com/uploads/2024/11/fivestarshipsmars2026.jpg",
+      "publishedAt": "2024-11-24T21:02:37Z",
+      "content": "Brian Wang is a Futurist Thought Leader and a popular Science blogger with 1 million readers per month. His blog Nextbigfuture.com is ranked #1 Science News Blog. It covers many disruptive technology\u2026 [+593 chars]"
+    }
+  ]
+}
