@@ -1,16 +1,29 @@
 import pandas
 import datetime as dt
-from random import randint, choice
+import smtplib
 
-birthday_list = []
-letter = []
+from random import randint
 
 PATH = "./Day 32/Birthday Wisher/"
+
+my_email = "fl0586114@gmail.com"
+my_password = ""
+
+def send_birthday_message(mail, message):
+    with smtplib.SMTP("smtp.gmail.com", port=587) as connection:
+        connection.starttls()
+        connection.login(user=my_email, password=my_password)
+        connection.sendmail(
+            from_addr=my_email,
+            to_addrs=mail,
+            msg=f"Subject:Happy Birthday\n\n{message}",
+        )
+
 
 try:
     birthday_data = pandas.read_csv(f"{PATH}/birthdays.csv")
 except:
-    print("FileNotFound")
+    print("Birthday Database Not Found")
 else:
     birthday_list = birthday_data.to_dict(orient="records")
 
@@ -21,42 +34,16 @@ try:
     with open(letter_path) as letter_file:
         letter = letter_file.readlines()
 except:
-    print("Letter not Found")
-
-for contact in birthday_list:
-    new_string = ""
-    for line in letter:
-        new_line = line.replace("[NAME]",f"{contact[0]["name"]}")
-        new_string += new_line
-    print(new_string)
-
-
-# for name in names:
-#     new_string = ""
-#     new_name = name.strip()
-#     for line in contents:
-#         new_line = line.replace("[name]", f"{new_name}")
-#         new_string += new_line
-#     with open(f"./Output/ReadyToSend/{new_name}.txt", mode="w") as new_letter:
-#         new_letter.write(new_string)
-
-# Dicitonary Structure
-# new_dict = [
-#     {
-#         "name": "yahoo",
-#         "email": "fl0586114@gmail.com",
-#         "year": 1961,
-#         "month": 11,
-#         "day": 23,
-#     },
-#     {
-#         "name": "bradgmail",
-#         "email": "bradlycarpenterza@gmail.com",
-#         "year": 1961,
-#         "month": 11,
-#         "day": 23,
-#     },
-# ]
+    print("Letters Not Found")
 
 now = dt.datetime.now()
-day_of_week = now.weekday()
+current_month = now.month
+current_day = now.day
+
+for contact in birthday_list:
+    if current_month == contact["month"] and current_day == contact["day"]:
+        final_letter = ""
+        for line in letter:
+            new_line = line.replace("[NAME]", f"{contact["name"]}")
+            final_letter += new_line
+    send_birthday_message(contact["email"], final_letter)
