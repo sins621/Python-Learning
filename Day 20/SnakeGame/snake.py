@@ -1,5 +1,5 @@
-from turtle import Turtle
 from random import randint
+from turtle import Turtle
 
 STARTING_LENGTH = 6
 positions = [(0, 0)]

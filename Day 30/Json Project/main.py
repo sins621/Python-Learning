@@ -1,9 +1,9 @@
+import json
+from random import choice, randint, shuffle
 from tkinter import *
 from tkinter import messagebox
-from random import randint, choice, shuffle
-import pyperclip
-import json
 
+import pyperclip
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 

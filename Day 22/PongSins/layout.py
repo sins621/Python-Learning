@@ -1,4 +1,4 @@
-from turtle import Turtle, Screen
+from turtle import Screen, Turtle
 
 screen_dimensions = {"small": (640, 480), "medium": (960, 960)}
 SCREEN_WIDTH, SCREEN_HEIGHT = screen_dimensions["small"]

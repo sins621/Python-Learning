@@ -1,5 +1,6 @@
 import asyncio  # Provides support for asynchronous programming
 import tkinter as tk  # Provides the GUI framework for the application
+
 import websockets  # Provides WebSocket protocol support for asynchronous communication
 
 # Create the main Tkinter window

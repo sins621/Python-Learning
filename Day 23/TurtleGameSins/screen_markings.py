@@ -1,5 +1,7 @@
 from turtle import Turtle
-from config import SCREEN_WIDTH, SCREEN_HEIGHT, FINISH_POS_OFFSET
+
+from config import FINISH_POS_OFFSET, SCREEN_HEIGHT, SCREEN_WIDTH
+
 
 class ScreenMarker(Turtle):
     def __init__(self):

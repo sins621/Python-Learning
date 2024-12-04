@@ -1,10 +1,11 @@
 import time
 from turtle import Screen
-from player import Player
-from screen_markings import ScreenMarker
+
 from car_manager import CarManager
-from config import SCREEN_WIDTH, SCREEN_HEIGHT, FINISH_POS_OFFSET
+from config import FINISH_POS_OFFSET, SCREEN_HEIGHT, SCREEN_WIDTH
+from player import Player
 from scoreboard import Scoreboard
+from screen_markings import ScreenMarker
 
 DELTA = 0.016
 

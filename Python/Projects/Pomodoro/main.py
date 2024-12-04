@@ -1,7 +1,6 @@
 import os
-import time
 import platform
-
+import time
 from datetime import date
 
 clear = lambda: (

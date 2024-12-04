@@ -1,5 +1,6 @@
 from turtle import Turtle
-from config import SCREEN_WIDTH, SCREEN_HEIGHT
+
+from config import SCREEN_HEIGHT, SCREEN_WIDTH
 
 FONT = ("Courier", 24, "normal")
 Y_OFFSET = 40

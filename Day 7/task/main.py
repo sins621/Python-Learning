@@ -1,8 +1,9 @@
-import random
-import words
-import hangman_ascii
 import os
 import platform
+import random
+
+import hangman_ascii
+import words
 
 clear = lambda: (
     os.system("cls") if platform.system() == "Windows" else os.system("clear")

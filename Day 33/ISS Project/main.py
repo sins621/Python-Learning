@@ -1,8 +1,9 @@
-import requests
 import smtplib
 from datetime import datetime
 from math import isclose
 from time import sleep
+
+import requests
 
 with open("./Keys/keys.txt") as keys:
     sender_mail = keys.readline().strip()

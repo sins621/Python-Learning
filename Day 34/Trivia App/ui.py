@@ -1,4 +1,5 @@
 import tkinter as Tk
+
 from quiz_brain import QuizBrain
 
 THEME_COLOR = "#375362"

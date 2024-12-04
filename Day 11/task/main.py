@@ -11,8 +11,9 @@
 # Cards are not removed from the deck as they are drawn.
 # The computer is the dealer.
 
-import art
 import random
+
+import art
 
 
 def sum_cards(hand):

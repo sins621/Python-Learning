@@ -1,6 +1,6 @@
-import pandas
 import turtle
 
+import pandas
 from state_text import StateText
 
 screen = turtle.Screen()

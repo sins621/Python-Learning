@@ -1,10 +1,9 @@
-import art
-import game_data
-import random
 import os
 import platform
 import random
 
+import art
+import game_data
 from game_data import data
 
 clear = lambda: (

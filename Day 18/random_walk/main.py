@@ -1,6 +1,7 @@
 import turtle as t
+from random import choice, randint
+
 from colors import turtle_colors
-from random import randint, choice
 
 t.colormode(255)
 turtle = t.Turtle()

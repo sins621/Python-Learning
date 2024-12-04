@@ -2,7 +2,6 @@
 
 import art
 
-
 alphabet = [
     "a",
     "b",
