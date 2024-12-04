@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "count": 1,
+    "links": {
+      "self": "https://test.api.amadeus.com/v1/reference-data/locations/cities?keyword=Paris&max=1"
+    }
+  },
+  "data": [
+    {
+      "type": "location",
+      "subType": "city",
+      "name": "Paris",
+      "iataCode": "PAR",
+      "address": {
+        "countryCode": "FR",
+        "stateCode": "FR-75"
+      },
+      "geoCode": {
+        "latitude": 48.85341,
+        "longitude": 2.3488
+      }
+    }
+  ]
+}

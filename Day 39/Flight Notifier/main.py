@@ -1,9 +1,8 @@
-# This file will need to use the DataManager,FlightSearch, FlightData, 
+# This file will need to use the DataManager,FlightSearch, FlightData,
 # NotificationManager classes to achieve the program requirements.
-import os
+from data_manager import DataManager
+from flight_data import FlightData
 
-from dotenv import load_dotenv
-
-load_dotenv()
-
-SHEETY_KEY = os.getenv('SHEETY')
+data_manager = DataManager()
+flight_data = FlightData()
+print(flight_data.test_data[0]["iataCode"])
