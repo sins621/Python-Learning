@@ -11,15 +11,14 @@ load_dotenv()
 current_date = datetime.now()
 current_date_only = current_date.date()
 
-date_in_6_months = current_date_only + relativedelta(months=6)
+date_in_6_months = current_date_only + relativedelta(months=1)
 
 AMADEUS_KEY = os.getenv("AMADEUS_KEY")
 AMADEUS_SECRET = os.getenv("AMADEUS_SECRET")
-AMADEUS_TOKEN = os.getenv("AMADEUS_TOKEN")
 PATH = "./Day 39/Flight Notifier"
 
 amadeus_city_get = "https://test.api.amadeus.com/v1/reference-data/locations/cities"
-amadeus_flight_offer_get = "https://test.api.amadeus.com/v2/shopping/flight-offers"
+amadeus_flight_offer_get = "https://test.api.amadeus.com/v1/shopping/flight-dates"
 
 
 class FlightData:
@@ -74,12 +73,10 @@ class FlightData:
             return None
 
         body = {
-            "originLocationCode": origin_iata,
-            "destinationLocationCode": destination_iata,
-            "departureDate": current_date_only,
-            "returnDate": date_in_6_months,
-            "adults": 1,
-            "currencyCode": "EUR",
+            "origin": origin_iata,
+            "destination": destination_iata,
+            "departureDate": f"{current_date_only},{date_in_6_months}",
+            "oneWay": False,
             "maxPrice": max_price,
         }
         headers = {"Authorization": f"Bearer {self.token}"}
