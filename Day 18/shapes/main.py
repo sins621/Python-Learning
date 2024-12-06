@@ -1,6 +1,7 @@
-from turtle import Turtle, Screen
-from colors import turtle_colors
 from random import choice
+from turtle import Screen, Turtle
+
+from colors import turtle_colors
 
 turtle = Turtle()
 screen = Screen()

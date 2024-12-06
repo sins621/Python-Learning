@@ -1,10 +1,11 @@
 #TODO: Fix Reset Bug
+import time
 from turtle import Screen, Turtle
+
+from ball import Ball
 from layout import Layout
 from paddle import Paddle
-from ball import Ball
 from scoreboard import Scoreboard
-import time
 
 screen = Screen()
 layout = Layout(screen)

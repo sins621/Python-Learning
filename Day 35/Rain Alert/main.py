@@ -1,7 +1,7 @@
 import json
+
 import requests
 from twilio.rest import Client
-
 
 KEY_PATH = "./Keys/keys.json"
 PROJECT_PATH = "./Day 35/Rain Alert"

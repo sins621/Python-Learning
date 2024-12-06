@@ -1,5 +1,6 @@
-import art
 import random
+
+import art
 
 print(art.logo)
 print("Welcome to the Number Guessing Game!")

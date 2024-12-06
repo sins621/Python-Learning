@@ -1,4 +1,5 @@
 from turtle import Turtle
+
 import config
 
 STARTING_OFFSET = 20

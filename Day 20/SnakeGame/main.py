@@ -1,8 +1,9 @@
-from turtle import Turtle, Screen
-from snake import Snake
+import time
+from turtle import Screen, Turtle
+
 from food import Food
 from scoreboard import Scoreboard
-import time
+from snake import Snake
 
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 600

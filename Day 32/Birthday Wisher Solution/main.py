@@ -6,10 +6,11 @@
 # See the solution video in the 100 Days of Python Course for explainations.
 
 
-from datetime import datetime
-import pandas
 import random
 import smtplib
+from datetime import datetime
+
+import pandas
 
 MY_EMAIL = "YOUR EMAIL"
 MY_PASSWORD = "YOUR PASSWORD"

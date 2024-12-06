@@ -1,6 +1,7 @@
-import os
-import requests
 import json
+import os
+
+import requests
 from twilio.rest import Client
 
 STOCK = "TSLA"

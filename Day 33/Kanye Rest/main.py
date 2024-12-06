@@ -1,6 +1,6 @@
 from tkinter import *
-import requests
 
+import requests
 
 
 def get_quote():

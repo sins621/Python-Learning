@@ -1,7 +1,8 @@
 # Display art
+from random import choice
+
 from art import logo, vs
 from game_data import data
-from random import choice
 
 
 def format_data(account):

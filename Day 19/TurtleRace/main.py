@@ -1,5 +1,5 @@
-from turtle import Turtle, Screen
 from random import randint
+from turtle import Screen, Turtle
 
 SCREEN_WIDTH = 500
 SCREEN_HEIGHT = 400

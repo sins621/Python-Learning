@@ -1,8 +1,8 @@
-import pandas
 import datetime as dt
 import smtplib
-
 from random import randint
+
+import pandas
 
 PATH = "./Day 32/Birthday Wisher/"
 

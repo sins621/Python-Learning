@@ -1,5 +1,5 @@
-import smtplib
 import datetime as dt
+import smtplib
 from random import choice
 
 PATH = "./Day 32/Email Project"

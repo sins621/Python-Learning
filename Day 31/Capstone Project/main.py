@@ -1,6 +1,7 @@
+from random import randint
 from tkinter import *
 from tkinter import messagebox
-from random import randint
+
 import pandas
 
 BACKGROUND_COLOR = "#B1DDC6"

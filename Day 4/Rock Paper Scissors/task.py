@@ -1,5 +1,5 @@
-import random
 import os
+import random
 
 clear = lambda: os.system("clear")
 clear()

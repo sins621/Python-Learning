@@ -1,5 +1,5 @@
-from menu import Menu, MenuItem
 from coffee_maker import CoffeeMaker
+from menu import Menu, MenuItem
 from money_machine import MoneyMachine
 
 is_on = True

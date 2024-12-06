@@ -1,6 +1,7 @@
-from car import Car
 from random import randint
-from config import SCREEN_WIDTH, SCREEN_HEIGHT
+
+from car import Car
+from config import SCREEN_HEIGHT, SCREEN_WIDTH
 
 GRID_DIV_SIZE = 50
 OFFSET = 20
