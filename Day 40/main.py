@@ -1,10 +1,29 @@
 import requests
 import os
 import json
+import datetime
+import smtplib
 
 from dotenv import load_dotenv
 
 load_dotenv()
+
+
+class Mail:
+    def __init__(self):
+        self.my_email = "fl0586114@gmail.com"
+        self.my_password = os.getenv("MAIL")
+
+    def send_mail(self, message, to_address):
+        with smtplib.SMTP("smtp.gmail.com", port=587) as connection:
+            connection.starttls()
+            connection.login(user=self.my_email, password=self.my_password)
+            connection.sendmail(
+                from_addr=self.my_email,
+                to_addrs=to_address,
+                msg=message,
+            )
+            print(f"Sending Flight Offer Mail to {to_address}")
 
 
 class AmadeusHandler:
@@ -64,13 +83,34 @@ class AmadeusHandler:
             )
             flight_offer_query_response.raise_for_status()
             print(f"Attempt to access {flight_offer_query_endpoint} successful")
-            return flight_offer_query_response.json()
         except requests.exceptions.RequestException as err:
             if hasattr(err.response, "text"):
                 print(f"Error details: {err.response.text}")
             print(
                 f"Attempt to access {flight_offer_query_endpoint} unsuccessful, error: {err}"
             )
+        else:
+            flight_offer_data = flight_offer_query_response.json()
+            flight_offers = []
+            for flight in flight_offer_data["data"]:
+                offer = {
+                    "origin": flight["origin"],
+                    "destination": flight["destination"],
+                    "departure_date": flight["departureDate"],
+                    "return_date": flight["returnDate"],
+                    "price": flight["price"]["total"],
+                }
+                flight_offers.append(offer)
+            return flight_offers
+
+    def calculate_lowest_price(self, data):
+        flights = data["data"]
+        lowest_price = flights[0]["price"]["total"]
+        for flight in flights:
+            flight_price = flight["price"]["total"]
+            if flight_price < lowest_price:
+                lowest_price = flight_price
+        return lowest_price
 
 
 class SheetyHandler:
@@ -121,12 +161,27 @@ city_data = parse_raw_city_data(sheety_city_data)
 
 amadeus = AmadeusHandler()
 
+today = datetime.date.today().isoformat()
+six_months_from_now = (
+    datetime.date.today() + datetime.timedelta(6 * 365 / 12)
+).isoformat()
+
+mail = Mail()
+
 for city, details in city_data.items():
     flight_data = amadeus.get_flight_offers(
         origin="LON",
         destination=details["iata_code"],
-        departure_date="2024-12-12,2025-06-12",
+        departure_date=f"{today},{six_months_from_now}",
         max_price=details["lowest_price"],
     )
-    print(json.dumps(flight_data, indent=2))
+    if flight_data is not None:
+        for flight in flight_data:
+            message = (
+                f'Low price alert! Only {flight["price"]} Euros to fly from {flight["origin"]} to '
+                f'{flight["destination"]}, departing on {flight["departure_date"]} '
+                f'and returning on {flight["return_date"]}'
+            )
 
+
+            mail.send_mail(message, "bradlycarpenterza@gmail.com")
