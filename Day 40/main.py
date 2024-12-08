@@ -46,10 +46,11 @@ class AmadeusHandler:
             "origin": flight_details.get("origin"),
             "destination": flight_details.get("destination"),
             "departureDate": flight_details.get("departure_date"),
-            "duration": "2,8",
-            # "maxPrice": flight_details.get("max_price"),
+            "maxPrice": flight_details.get("max_price"),
+            "duration": "1,180",
             "oneWay": False,
-            "viewBy": "DATE",
+            # "nonStop": True,
+            "viewBy": "WEEK",
         }
 
         flight_offer_query_headers = {"Authorization": f"Bearer {self.amadeus_token}"}
@@ -102,28 +103,30 @@ class SheetyHandler:
             return None
 
 
-# sheety = SheetyHandler()
+sheety = SheetyHandler()
 
 
-# def parse_raw_city_data(raw_city_data):
-#     formatted_city_data = {}
-#     for city_data in raw_city_data["prices"]:
-#         formatted_city_data[city_data["city"]] = {
-#             "iata_code": city_data["iataCode"],
-#             "lowest_price": city_data["lowestPrice"],
-#         }
-#     return formatted_city_data
+def parse_raw_city_data(raw_city_data):
+    formatted_city_data = {}
+    for city_data in raw_city_data["prices"]:
+        formatted_city_data[city_data["city"]] = {
+            "iata_code": city_data["iataCode"],
+            "lowest_price": city_data["lowestPrice"],
+        }
+    return formatted_city_data
 
 
-# sheety_city_data = sheety.get_city_data()
-# city_data = parse_raw_city_data(sheety_city_data)
+sheety_city_data = sheety.get_city_data()
+city_data = parse_raw_city_data(sheety_city_data)
 
 amadeus = AmadeusHandler()
 
-flight_data = amadeus.get_flight_offers(
-    origin="MAD",
-    destination="MUC",
-    departure_date="2024-12-12,2025-01-30",
-    # max_price=200000,
-)
-print(json.dumps(flight_data, indent=2))
+for city, details in city_data.items():
+    flight_data = amadeus.get_flight_offers(
+        origin="LON",
+        destination=details["iata_code"],
+        departure_date="2024-12-12,2025-06-12",
+        max_price=details["lowest_price"],
+    )
+    print(json.dumps(flight_data, indent=2))
+
