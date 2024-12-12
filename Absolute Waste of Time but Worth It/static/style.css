@@ -3,9 +3,10 @@ html {
 }
 #meme {
   width: 50%;
+  height: 70%;
   margin-left: 25%;
   margin-top: 2%;
-  font-family: "Libre Baskerville", serif;
+  font-family: serif;
   font-weight: 400;
   font-style: normal;
   text-align: center;
