@@ -1,9 +1,9 @@
-import requests
-import os
-import json
 import datetime
+import json
+import os
 import smtplib
 
+import requests
 from dotenv import load_dotenv
 
 load_dotenv()
