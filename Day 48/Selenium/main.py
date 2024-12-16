@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from datetime import datetime
 
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_experimental_option("detach", True)
@@ -26,27 +27,14 @@ driver.get("https://www.python.org/")
 # print(documentation_link)
 # print(download_link)
 
-upcoming_event_xpaths = [
-    (
-        "/html/body/div/div[3]/div/section/div[3]/div[2]/div/ul/li[1]/time",
-        "/html/body/div/div[3]/div/section/div[3]/div[2]/div/ul/li[1]/a",
-    ),
-    (
-        "/html/body/div/div[3]/div/section/div[3]/div[2]/div/ul/li[2]/time",
-        "/html/body/div/div[3]/div/section/div[3]/div[2]/div/ul/li[2]/a",
-    ),
-    (
-        "/html/body/div/div[3]/div/section/div[3]/div[2]/div/ul/li[3]/time",
-        "/html/body/div/div[3]/div/section/div[3]/div[2]/div/ul/li[3]/a",
-    ),
-    (
-        "/html/body/div/div[3]/div/section/div[3]/div[2]/div/ul/li[4]/time",
-        "/html/body/div/div[3]/div/section/div[3]/div[2]/div/ul/li[4]/a",
-    ),
-    (
-        "/html/body/div/div[3]/div/section/div[3]/div[2]/div/ul/li[5]/time",
-        "/html/body/div/div[3]/div/section/div[3]/div[2]/div/ul/li[5]/a",
-    ),
-]
+upcoming_event_title_elements = driver.find_elements(
+    By.CSS_SELECTOR, value="div.medium-widget.event-widget.last div.shrubbery ul.menu a"
+)
+
+upcoming_event_date_elements = driver.find_elements(
+    By.CSS_SELECTOR,
+    value="div.medium-widget.event-widget.last div.shrubbeery ul.menu time",
+)
+
 
 driver.quit()
