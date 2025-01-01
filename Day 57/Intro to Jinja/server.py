@@ -1,6 +1,7 @@
-from flask import Flask, render_template
-from random import randint
 from datetime import datetime
+from random import randint
+
+from flask import Flask, render_template
 from requests import get
 
 app = Flask(__name__)

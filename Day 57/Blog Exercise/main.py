@@ -1,7 +1,6 @@
 from flask import Flask, render_template
 from requests import get
 
-
 app = Flask(__name__)
 
 all_posts = None
