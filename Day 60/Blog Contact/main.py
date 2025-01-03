@@ -5,7 +5,6 @@ import requests
 from dotenv import load_dotenv
 from flask import Flask, render_template, request
 
-
 load_dotenv()
 
 posts = requests.get("https://api.npoint.io/c790b4d5cab58020d391").json()
