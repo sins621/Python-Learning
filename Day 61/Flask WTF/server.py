@@ -1,8 +1,9 @@
 from flask import Flask, render_template
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import DataRequired, Email, Length  # pip install email-validator
 from flask_bootstrap import Bootstrap5  # pip install bootstrap-flask
+from flask_wtf import FlaskForm
+from wtforms import PasswordField, StringField, SubmitField
+from wtforms.validators import (DataRequired,  # pip install email-validator
+                                Email, Length)
 
 '''
 Red underlines? Install the required packages first: 
