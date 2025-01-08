@@ -9,7 +9,7 @@
 <body>
   <h1>My Library</h1>
   <ul>
-    {% if books|length == 0 %}
+    {% if books.length == 0 %}
     <p> No books to show </p>
     {% else %}
     {% for book in books %}
