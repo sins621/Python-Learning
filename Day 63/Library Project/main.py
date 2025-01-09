@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, redirect, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Float, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
@@ -35,7 +35,6 @@ all_books = []
 #     db.session.add(new_book)
 #     db.session.commit()
 
-
 @app.route("/", methods=["GET", "POST"])
 def home():
     result = db.session.execute(db.select(Book).order_by(Book.title))
@@ -56,8 +55,23 @@ def add():
         )
         db.session.add(book_data)
         db.session.commit()
+        return redirect("/")
     return render_template("add.html")
 
+@app.route("/edit", methods=["GET", "POST"])
+def edit():
+    book_id = request.args.get('book_id', type = int)
+    if request.method == "POST":
+        data = request.form
+        rating = data["rating"]
+        book_id = data["book_id"]
+        book_to_update = db.session.execute(db.select(Book).where(Book.id == book_id)).scalar()
+        book_to_update.rating = float(rating)
+        db.session.commit()
+        return redirect("/")
+    else:
+        book_to_update = db.session.execute(db.select(Book).where(Book.id == book_id)).scalar()
+    return render_template("edit.html", id=book_id, book=book_to_update)
 
 if __name__ == "__main__":
     app.run(debug=True)
