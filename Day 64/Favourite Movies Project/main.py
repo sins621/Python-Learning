@@ -44,6 +44,17 @@ class Movie(db.Model):
         self.img_url = kw.get("img_url", None)
 
 
+class EditForm(FlaskForm):
+    new_rating = StringField("Your Rating Out of 10", validators=[DataRequired()])
+    new_review = StringField("Your Review", validators=[DataRequired()])
+    submit = SubmitField("Submit")
+
+
+class AddForm(FlaskForm):
+    movie_title = StringField("Movie Title", validators=[DataRequired()])
+    submit = SubmitField("Submit")
+
+
 @app.route("/")
 def home():
     movies_query = db.session.execute(
@@ -52,23 +63,52 @@ def home():
     return render_template("index.html", movies=movies_query)
 
 
-class MyForm(FlaskForm):
-    new_rating = StringField("Your Rating Out of 10", validators=[DataRequired()])
-    new_review = StringField("Your Review", validators=[DataRequired()])
-    submit = SubmitField("Submit")
-
-
-movie_id = 0
-
-
 @app.route("/edit", methods=["POST", "GET"])
 def edit():
-    global movie_id
-    edit_form = MyForm()
+    movie_id = request.args.get("movie_id")
+    edit_form = EditForm()
     movie_query = db.session.execute(
         db.select(Movie).where(Movie.id == movie_id)
     ).scalar()
+    if edit_form.validate_on_submit():
+        if movie_query != None:
+            print(edit_form.new_rating.data)
+            print(edit_form.new_review.data)
+            movie_query.rating = edit_form.new_rating.data
+            movie_query.review = edit_form.new_review.data
+            db.session.commit()
+            return redirect("/")
+        else:
+            print("movie_query is none")
+            return redirect("/")
     return render_template("edit.html", form=edit_form, movie=movie_query)
+
+
+@app.route("/delete", methods=["POST", "GET"])
+def delete():
+    movie_id = request.args.get("movie_id")
+    movie_query = db.session.execute(
+        db.select(Movie).where(Movie.id == movie_id)
+    ).scalar()
+    if movie_query != None:
+        db.session.delete(movie_query)
+        db.session.commit()
+    else:
+        return "Unlucky"
+    return redirect("/")
+
+
+# Create
+# with app.app_context():
+#     db.create_all()
+#     new_book = Book(title="pussy Potter", author="J. K. Rowling", rating=9.3)
+#     db.session.add(new_book)
+#     db.session.commit()
+
+
+@app.route("/add")
+def add():
+    return ""
 
 
 if __name__ == "__main__":
