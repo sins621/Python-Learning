@@ -121,12 +121,18 @@ class AddForm(FlaskForm):
     submit = SubmitField("Add Movie")
 
 
-@app.route("/add")
+@app.route("/add", methods=["POST", "GET"])
 def add():
     add_form = AddForm()
     if add_form.validate_on_submit():
-        pass
+        return render_template("select.html", movie_title=add_form.movie_title.data)
     return render_template("add.html", form=add_form)
+
+
+@app.route("/select", methods=["POST", "GET"])
+def select():
+    movie_title = request.args.get("movie_title")
+    return f"{movie_title}"
 
 
 if __name__ == "__main__":
