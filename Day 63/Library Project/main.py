@@ -69,10 +69,13 @@ def edit():
     if request.method == "POST":
         data = request.form
         rating = data["rating"]
-        book_id = book_id
         book_to_update = db.session.execute(
             db.select(Book).where(Book.id == book_id)
         ).scalar()
+
+        if book_to_update is None:
+            return redirect("/")
+
         book_to_update.rating = float(rating)
         db.session.commit()
         return redirect("/")
@@ -81,6 +84,10 @@ def edit():
         book_to_update = db.session.execute(
             db.select(Book).where(Book.id == book_id)
         ).scalar()
+
+        if book_to_update is None:
+            return redirect("/")
+
     return render_template("edit.html", id=book_id, book=book_to_update)
 
 
