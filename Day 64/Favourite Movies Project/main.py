@@ -52,5 +52,24 @@ def home():
     return render_template("index.html", movies=movies_query)
 
 
+class MyForm(FlaskForm):
+    new_rating = StringField("Your Rating Out of 10", validators=[DataRequired()])
+    new_review = StringField("Your Review", validators=[DataRequired()])
+    submit = SubmitField("Submit")
+
+
+movie_id = 0
+
+
+@app.route("/edit", methods=["POST", "GET"])
+def edit():
+    global movie_id
+    edit_form = MyForm()
+    movie_query = db.session.execute(
+        db.select(Movie).where(Movie.id == movie_id)
+    ).scalar()
+    return render_template("edit.html", form=edit_form, movie=movie_query)
+
+
 if __name__ == "__main__":
     app.run(debug=True)
