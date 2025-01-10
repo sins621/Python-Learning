@@ -1,15 +1,23 @@
-from flask import Flask, render_template, redirect, url_for, request
+import os
+
+import requests
+from dotenv import load_dotenv
+from flask import Flask, redirect, render_template, request, url_for
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from sqlalchemy import Integer, String, Float
 from flask_wtf import FlaskForm
+from sqlalchemy import Float, Integer, String
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
-import requests
+
+load_dotenv()
+movie_db_key = os.getenv("MOVIE_DB_KEY")
 
 
 app = Flask(__name__)
+
+# Unimportant Key
 app.config["SECRET_KEY"] = "8BYkEfBA6O6donzWlSihBXox7C0sKR6b"
 Bootstrap5(app)
 
@@ -22,6 +30,13 @@ db = SQLAlchemy(model_class=Base)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///movies.db"
 db.init_app(app)
+
+movie_search_url = "https://api.themoviedb.org/3/search/movie"
+movie_search_headers = {
+    "accept": "application/json",
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhZDQ1NzVjZTQ4YTkyY2VlYThlYjIwODQwNGJiMzJhZCIsIm5iZiI6MTczNjU0MTg1Ny4zNDQsInN1YiI6IjY3ODE4NmExMjE4ZmQ1N2FjZjRlYmEwYiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.5PzMFTRcbYBJ-HArLtyhL7JnwbSeO4dgY6CVGLTIOA8",
+}
+movie_search_params = {"query": ""}
 
 
 class Movie(db.Model):
@@ -47,11 +62,6 @@ class Movie(db.Model):
 class EditForm(FlaskForm):
     new_rating = StringField("Your Rating Out of 10", validators=[DataRequired()])
     new_review = StringField("Your Review", validators=[DataRequired()])
-    submit = SubmitField("Submit")
-
-
-class AddForm(FlaskForm):
-    movie_title = StringField("Movie Title", validators=[DataRequired()])
     submit = SubmitField("Submit")
 
 
@@ -95,7 +105,7 @@ def delete():
         db.session.commit()
     else:
         return "Unlucky"
-    return redirect("/")
+    return redirect(url_for("home"))
 
 
 # Create
@@ -106,9 +116,17 @@ def delete():
 #     db.session.commit()
 
 
+class AddForm(FlaskForm):
+    movie_title = StringField("Movie Title", validators=[DataRequired()])
+    submit = SubmitField("Add Movie")
+
+
 @app.route("/add")
 def add():
-    return ""
+    add_form = AddForm()
+    if add_form.validate_on_submit():
+        pass
+    return render_template("add.html", form=add_form)
 
 
 if __name__ == "__main__":
