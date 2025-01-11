@@ -1,4 +1,5 @@
 import os
+import json
 
 import requests
 from dotenv import load_dotenv
@@ -36,18 +37,17 @@ movie_search_headers = {
     "accept": "application/json",
     "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhZDQ1NzVjZTQ4YTkyY2VlYThlYjIwODQwNGJiMzJhZCIsIm5iZiI6MTczNjU0MTg1Ny4zNDQsInN1YiI6IjY3ODE4NmExMjE4ZmQ1N2FjZjRlYmEwYiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.5PzMFTRcbYBJ-HArLtyhL7JnwbSeO4dgY6CVGLTIOA8",
 }
-movie_search_params = {"query": ""}
 
 
 class Movie(db.Model):
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    title: Mapped[String] = mapped_column(String(250), unique=True)
-    year: Mapped[int] = mapped_column(Integer, nullable=False)
-    description: Mapped[String] = mapped_column(String(250), nullable=False)
-    rating: Mapped[float] = mapped_column(Float, nullable=False)
-    ranking: Mapped[int] = mapped_column(Integer, nullable=False)
-    review: Mapped[String] = mapped_column(String(250), nullable=False)
-    img_url: Mapped[String] = mapped_column(String(250), nullable=False)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    title: Mapped[String] = mapped_column(String(), unique=True)
+    year: Mapped[int] = mapped_column(Integer)
+    description: Mapped[String] = mapped_column(String())
+    rating: Mapped[float] = mapped_column(Float)
+    ranking: Mapped[int] = mapped_column(Integer)
+    review: Mapped[String] = mapped_column(String())
+    img_url: Mapped[String] = mapped_column(String())
 
     def __init__(self, **kw):
         self.title = kw.get("title", None)
@@ -60,7 +60,7 @@ class Movie(db.Model):
 
 
 class EditForm(FlaskForm):
-    new_rating = StringField("Your Rating Out of 10", validators=[DataRequired()])
+    new_ranking = StringField("Your Ranking Out of 10", validators=[DataRequired()])
     new_review = StringField("Your Review", validators=[DataRequired()])
     submit = SubmitField("Submit")
 
@@ -82,9 +82,9 @@ def edit():
     ).scalar()
     if edit_form.validate_on_submit():
         if movie_query != None:
-            print(edit_form.new_rating.data)
+            print(edit_form.new_ranking.data)
             print(edit_form.new_review.data)
-            movie_query.rating = edit_form.new_rating.data
+            movie_query.ranking = edit_form.new_ranking.data
             movie_query.review = edit_form.new_review.data
             db.session.commit()
             return redirect("/")
@@ -121,18 +121,61 @@ class AddForm(FlaskForm):
     submit = SubmitField("Add Movie")
 
 
-@app.route("/add", methods=["POST", "GET"])
-def add():
+@app.route("/add_form", methods=["POST", "GET"])
+def add_form():
     add_form = AddForm()
     if add_form.validate_on_submit():
-        return render_template("select.html", movie_title=add_form.movie_title.data)
+        return redirect(url_for("select", movie_title=add_form.movie_title.data))
     return render_template("add.html", form=add_form)
+
+
+@app.route("/add_movie")
+def add_movie():
+    movie_title = request.args.get("title")
+    movie_year = request.args.get("year")
+    movie_description = request.args.get("description")
+    movie_rating = request.args.get("rating")
+    movie_ranking = request.args.get("ranking")
+    movie_review = request.args.get("review")
+    movie_img_url = request.args.get("img_url")
+    db.session.add(
+        Movie(
+            title=movie_title,
+            year=movie_year,
+            description=movie_description,
+            rating=movie_rating,
+            ranking=movie_ranking,
+            review=movie_review,
+            img_url=movie_img_url,
+        )
+    )
+    db.session.commit()
+    return redirect("/")
 
 
 @app.route("/select", methods=["POST", "GET"])
 def select():
     movie_title = request.args.get("movie_title")
-    return f"{movie_title}"
+    movie_search_params = {"query": movie_title}
+    response = requests.get(
+        url=movie_search_url, headers=movie_search_headers, params=movie_search_params
+    )
+    data = response.json()
+    print(json.dumps(data, indent=2))
+    movie_data = []
+    for result in data["results"]:
+        movie = {
+            "title": result.get("original_title", None),
+            "year": result.get("release_date", "Unreleased"),
+            "description": result.get("overview", "No Description"),
+            "rating": float(result.get("vote_average", 0.0)),
+            "ranking": "None",
+            "review": "None",
+            "img_url": f"https://image.tmdb.org/t/p/w500/{result.get("poster_path", None)}",
+        }
+        movie_data.append(movie)
+    print(movie_data)
+    return render_template("select.html", movies=movie_data)
 
 
 if __name__ == "__main__":
