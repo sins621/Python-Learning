@@ -21,13 +21,7 @@ class ScreenMarker(Turtle):
 
     def draw_finish(self):
         self.color("red")
-        self.goto(
-                SCREEN_WIDTH // 2,
-                SCREEN_HEIGHT // 2 - FINISH_POS_OFFSET
-                )
+        self.goto(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - FINISH_POS_OFFSET)
         self.pd()
-        self.goto(
-                SCREEN_WIDTH // -2,
-                SCREEN_HEIGHT // 2 - FINISH_POS_OFFSET
-                )
+        self.goto(SCREEN_WIDTH // -2, SCREEN_HEIGHT // 2 - FINISH_POS_OFFSET)
         self.pu()
