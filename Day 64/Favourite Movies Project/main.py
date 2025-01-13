@@ -103,14 +103,6 @@ def delete():
     return redirect(url_for("home"))
 
 
-# Create
-# with app.app_context():
-#     db.create_all()
-#     new_book = Book(title="pussy Potter", author="J. K. Rowling", rating=9.3)
-#     db.session.add(new_book)
-#     db.session.commit()
-
-
 class AddForm(FlaskForm):
     movie_title = StringField("Movie Title", validators=[DataRequired()])
     submit = SubmitField("Add Movie")

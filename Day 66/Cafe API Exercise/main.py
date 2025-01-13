@@ -1,7 +1,8 @@
+import json
 from flask import Flask, jsonify, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import DeclarativeBase, mapped_column
 from sqlalchemy import Integer, String, Boolean
 from random import choice
 
@@ -19,23 +20,62 @@ db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
 
-# Cafe TABLE Configuration
 class Cafe(db.Model):
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    name: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
-    map_url: Mapped[str] = mapped_column(String(500), nullable=False)
-    img_url: Mapped[str] = mapped_column(String(500), nullable=False)
-    location: Mapped[str] = mapped_column(String(250), nullable=False)
-    seats: Mapped[str] = mapped_column(String(250), nullable=False)
-    has_toilet: Mapped[bool] = mapped_column(Boolean, nullable=False)
-    has_wifi: Mapped[bool] = mapped_column(Boolean, nullable=False)
-    has_sockets: Mapped[bool] = mapped_column(Boolean, nullable=False)
-    can_take_calls: Mapped[bool] = mapped_column(Boolean, nullable=False)
-    coffee_price: Mapped[str] = mapped_column(String(250), nullable=True)
+    id = mapped_column(Integer, primary_key=True)
+    name = mapped_column(String(250), unique=True, nullable=False)
+    map_url = mapped_column(String(500), nullable=False)
+    img_url = mapped_column(String(500), nullable=False)
+    location = mapped_column(String(250), nullable=False)
+    seats = mapped_column(String(250), nullable=False)
+    has_toilet = mapped_column(Boolean, nullable=False)
+    has_wifi = mapped_column(Boolean, nullable=False)
+    has_sockets = mapped_column(Boolean, nullable=False)
+    can_take_calls = mapped_column(Boolean, nullable=False)
+    coffee_price = mapped_column(String(250), nullable=True)
+
+    def __init__(
+        self,
+        name,
+        map_url,
+        img_url,
+        location,
+        seats,
+        has_toilet,
+        has_wifi,
+        has_sockets,
+        can_take_calls,
+        coffee_price,
+    ):
+        self.name = name
+        self.map_url = map_url
+        self.img_url = img_url
+        self.location = location
+        self.seats = seats
+        self.has_toilet = has_toilet
+        self.has_wifi = has_wifi
+        self.has_sockets = has_sockets
+        self.can_take_calls = can_take_calls
+        self.coffee_price = coffee_price
 
 
 with app.app_context():
     db.create_all()
+
+
+def transform_cafe_o(cafe_o) -> dict:
+    return {
+        "id": cafe_o.id,
+        "name": cafe_o.name,
+        "map_url": cafe_o.map_url,
+        "img_url": cafe_o.img_url,
+        "location": cafe_o.location,
+        "seats": cafe_o.seats,
+        "has_toilet": cafe_o.has_toilet,
+        "has_wifi": cafe_o.has_wifi,
+        "has_sockets": cafe_o.has_sockets,
+        "can_take_calls": cafe_o.can_take_calls,
+        "coffee_price": cafe_o.coffee_price,
+    }
 
 
 @app.route("/")
@@ -54,21 +94,7 @@ def random():
 
         random_cafe = choice(all_cafes)
 
-        return jsonify(
-            cafe={
-                "id": random_cafe.id,
-                "name": random_cafe.name,
-                "map_url": random_cafe.map_url,
-                "img_url": random_cafe.img_url,
-                "location": random_cafe.location,
-                "seats": random_cafe.seats,
-                "has_toilet": random_cafe.has_toilet,
-                "has_wifi": random_cafe.has_wifi,
-                "has_sockets": random_cafe.has_sockets,
-                "can_take_calls": random_cafe.can_take_calls,
-                "coffee_price": random_cafe.coffee_price,
-            }
-        )
+        return jsonify(transform_cafe_o(random_cafe))
 
     except SQLAlchemyError as e:
         print(f"Database query failed: {e}")
@@ -83,22 +109,9 @@ def all():
         if not all_cafes:
             return jsonify({"error": "No cafes found"}), 404
 
-        print(all_cafes)
         cafe_list = []
         for cafe_item in all_cafes:
-            cafe = {
-                "id": cafe_item.id,
-                "name": cafe_item.name,
-                "map_url": cafe_item.map_url,
-                "img_url": cafe_item.img_url,
-                "location": cafe_item.location,
-                "seats": cafe_item.seats,
-                "has_toilet": cafe_item.has_toilet,
-                "has_wifi": cafe_item.has_wifi,
-                "has_sockets": cafe_item.has_sockets,
-                "can_take_calls": cafe_item.can_take_calls,
-                "coffee_price": cafe_item.coffee_price,
-            }
+            cafe = transform_cafe_o(cafe_item)
             cafe_list.append(cafe)
         return jsonify(cafes=cafe_list)
 
@@ -107,7 +120,44 @@ def all():
         return jsonify({"error": "Database error occurred"}), 500
 
 
-# HTTP POST - Create Record
+@app.route("/search")
+def search():
+    try:
+        cafe_location = request.args.get("loc")
+        cafe_location_query = db.session.execute(
+            db.select(Cafe).where(Cafe.location == cafe_location)
+        ).scalar()
+        if not cafe_location_query:
+            return (
+                jsonify({"error": "Sorry, we don't have a cafe at that location."}),
+                404,
+            )
+        return jsonify(cafe=transform_cafe_o(cafe_location_query))
+    except SQLAlchemyError as e:
+        print(f"Database query failed: {e}")
+        return jsonify({"error": "Database error occurred"}), 500
+
+
+@app.route("/add_cafe", methods=["POST"])
+def add_cafe():
+    new_cafe_info = request.args
+    new_cafe = Cafe(
+        name=new_cafe_info.get("name", ""),
+        map_url=new_cafe_info.get("map_url", ""),
+        img_url=new_cafe_info.get("img_url", ""),
+        location=new_cafe_info.get("location", ""),
+        seats=new_cafe_info.get("seats", ""),
+        has_toilet=new_cafe_info.get("has_toilet", "False").lower() in ["true", "1"],
+        has_wifi=new_cafe_info.get("has_wifi", "False").lower() in ["true", "1"],
+        has_sockets=new_cafe_info.get("has_sockets", "False").lower() in ["true", "1"],
+        can_take_calls=new_cafe_info.get("can_take_calls", "False").lower()
+        in ["true", "1"],
+        coffee_price=new_cafe_info.get("coffee_price", ""),
+    )
+
+    print(json.dumps(transform_cafe_o(new_cafe), indent=2))
+    return f"{jsonify(cafe = transform_cafe_o(new_cafe))}"
+
 
 # HTTP PUT/PATCH - Update Record
 
