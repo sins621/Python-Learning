@@ -23,7 +23,6 @@ def send_request(method, url, headers=None, params=None, data=None, json_payload
             parsed_json = response.json()
             print(json.dumps(parsed_json, indent=2))
         except json.JSONDecodeError:
-
             print(response.text)
 
     except requests.RequestException as e:

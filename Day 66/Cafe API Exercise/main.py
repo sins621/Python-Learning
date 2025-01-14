@@ -2,7 +2,7 @@ import json
 from flask import Flask, jsonify, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm import DeclarativeBase, mapped_column
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Boolean
 from random import choice
 
@@ -21,17 +21,17 @@ db.init_app(app)
 
 
 class Cafe(db.Model):
-    id = mapped_column(Integer, primary_key=True)
-    name = mapped_column(String(250), unique=True, nullable=False)
-    map_url = mapped_column(String(500), nullable=False)
-    img_url = mapped_column(String(500), nullable=False)
-    location = mapped_column(String(250), nullable=False)
-    seats = mapped_column(String(250), nullable=False)
-    has_toilet = mapped_column(Boolean, nullable=False)
-    has_wifi = mapped_column(Boolean, nullable=False)
-    has_sockets = mapped_column(Boolean, nullable=False)
-    can_take_calls = mapped_column(Boolean, nullable=False)
-    coffee_price = mapped_column(String(250), nullable=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[String] = mapped_column(String(250), unique=True, nullable=False)
+    map_url: Mapped[String] = mapped_column(String(500), nullable=False)
+    img_url: Mapped[String] = mapped_column(String(500), nullable=False)
+    location: Mapped[String] = mapped_column(String(250), nullable=False)
+    seats: Mapped[String] = mapped_column(String(250), nullable=False)
+    has_toilet: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    has_wifi: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    has_sockets: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    can_take_calls: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    coffee_price: Mapped[String] = mapped_column(String(250), nullable=True)
 
     def __init__(
         self,
@@ -138,6 +138,13 @@ def search():
         return jsonify({"error": "Database error occurred"}), 500
 
 
+def db_has_name(cafe_o, cafes):
+    for cafe in cafes:
+        if cafe_o.name == cafe.name:
+            return True
+    return False
+
+
 @app.route("/add_cafe", methods=["POST"])
 def add_cafe():
     new_cafe_info = request.args
@@ -155,8 +162,19 @@ def add_cafe():
         coffee_price=new_cafe_info.get("coffee_price", ""),
     )
 
-    print(json.dumps(transform_cafe_o(new_cafe), indent=2))
-    return f"{jsonify(cafe = transform_cafe_o(new_cafe))}"
+    try:
+        result = db.session.execute(db.select(Cafe).order_by(Cafe.name))
+        all_cafes = result.scalars().all()
+        if db_has_name(new_cafe, all_cafes):
+            return jsonify({"error": f"Database already has {new_cafe.name}"}), 400
+        else:
+            db.session.add(new_cafe)
+            db.session.commit()
+
+    except SQLAlchemyError as e:
+        return jsonify({"error": f"Database error {e} occured"}), 500
+
+    return jsonify({"success": f"Added {new_cafe.name} to the Database"}), 200
 
 
 # HTTP PUT/PATCH - Update Record
