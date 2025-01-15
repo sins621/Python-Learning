@@ -30,8 +30,8 @@ def send_request(method, url, headers=None, params=None, data=None, json_payload
 
 
 if __name__ == "__main__":
-    method = "POST"
-    url = "http://127.0.0.1:5000/add_cafe"
+    method = "PATCH"
+    url = "http://127.0.0.1:5000/update-price/0"
 
     headers = {
         "Content-Type": "application/json",
@@ -39,15 +39,15 @@ if __name__ == "__main__":
     }
 
     params = {
-        "name": "My Cafe",
-        "map_url": "http://cool.com",
-        "img_url": "http://cool_image_url",
-        "location": "Kraaifontein",
-        "seats": "2",
-        "has_toilet": False,
-        "has_wifi": True,
-        "has_sockets": True,
-        "can_take_calls": True,
+        # "name": "My Cafe",
+        # "map_url": "http://cool.com",
+        # "img_url": "http://cool_image_url",
+        # "location": "Kraaifontein",
+        # "seats": "2",
+        # "has_toilet": False,
+        # "has_wifi": True,
+        # "has_sockets": True,
+        # "can_take_calls": True,
         "coffee_price": 1.1,
     }
 

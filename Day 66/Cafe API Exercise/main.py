@@ -1,4 +1,3 @@
-import json
 from flask import Flask, jsonify, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import SQLAlchemyError
@@ -78,6 +77,20 @@ def transform_cafe_o(cafe_o) -> dict:
     }
 
 
+def db_has_name(cafe_o, cafes):
+    for cafe in cafes:
+        if cafe_o.name == cafe.name:
+            return True
+    return False
+
+
+def db_has_id(query_id, cafes):
+    for cafe in cafes:
+        if query_id == cafe.id:
+            return True
+    return False
+
+
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -138,13 +151,6 @@ def search():
         return jsonify({"error": "Database error occurred"}), 500
 
 
-def db_has_name(cafe_o, cafes):
-    for cafe in cafes:
-        if cafe_o.name == cafe.name:
-            return True
-    return False
-
-
 @app.route("/add_cafe", methods=["POST"])
 def add_cafe():
     new_cafe_info = request.args
@@ -178,6 +184,28 @@ def add_cafe():
 
 
 # HTTP PUT/PATCH - Update Record
+@app.route("/update-price/<int:cafe_id>", methods=["PUT", "PATCH"])
+def update_price(cafe_id):
+    new_price = request.args.get("coffee_price", None)
+
+    try:
+        result = db.session.execute(db.select(Cafe).order_by(Cafe.name))
+        all_cafes = result.scalars().all()
+
+        query_id = cafe_id
+        cafe_to_update = db.get_or_404(Cafe, query_id, description=f"The Cafe at ID:{cafe_id} does not Exist in our Database")
+        if db_has_id(query_id, all_cafes):
+            if new_price:
+                cafe_to_update.coffee_price = new_price
+            else:
+                return jsonify({"error": "Coffee Price was not Provided"}), 400
+        db.session.commit()
+
+    except SQLAlchemyError as e:
+        return jsonify({"error": f"Database error {e} occured"}), 500
+
+    return jsonify({"success": "Price updated"}), 200
+
 
 # HTTP DELETE - Delete Record
 
