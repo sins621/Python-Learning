@@ -30,8 +30,8 @@ def send_request(method, url, headers=None, params=None, data=None, json_payload
 
 
 if __name__ == "__main__":
-    method = "PATCH"
-    url = "http://127.0.0.1:5000/update-price/0"
+    method = "DELETE"
+    url = "http://127.0.0.1:5000/delete-cafe/8"
 
     headers = {
         "Content-Type": "application/json",
@@ -48,9 +48,10 @@ if __name__ == "__main__":
         # "has_wifi": True,
         # "has_sockets": True,
         # "can_take_calls": True,
-        "coffee_price": 1.1,
+        # "coffee_price": 1.1,
+        "api_key": "secret_key"
     }
 
     json_payload = {"title": "foo", "body": "bar", "userId": 1}
 
-    send_request(method, url, params=params)
+    send_request(method, url, params)

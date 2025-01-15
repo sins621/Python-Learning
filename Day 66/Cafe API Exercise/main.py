@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, render_template, request
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import SQLAlchemyError, DataError
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Boolean
 from random import choice
@@ -80,13 +80,6 @@ def transform_cafe_o(cafe_o) -> dict:
 def db_has_name(cafe_o, cafes):
     for cafe in cafes:
         if cafe_o.name == cafe.name:
-            return True
-    return False
-
-
-def db_has_id(query_id, cafes):
-    for cafe in cafes:
-        if query_id == cafe.id:
             return True
     return False
 
@@ -186,28 +179,48 @@ def add_cafe():
 # HTTP PUT/PATCH - Update Record
 @app.route("/update-price/<int:cafe_id>", methods=["PUT", "PATCH"])
 def update_price(cafe_id):
+    cafe_to_update = Cafe.query.get_or_404(
+        cafe_id, description=f"Cafe at ID:{cafe_id} not Found"
+    )
     new_price = request.args.get("coffee_price", None)
+    if new_price is not None:
 
-    try:
-        result = db.session.execute(db.select(Cafe).order_by(Cafe.name))
-        all_cafes = result.scalars().all()
+        if len(new_price) > 250:
+            return (
+                jsonify(
+                    {"error": "Coffee price exceeds maximum length of 250 characters"}
+                ),
+                400,
+            )
 
-        query_id = cafe_id
-        cafe_to_update = db.get_or_404(Cafe, query_id, description=f"The Cafe at ID:{cafe_id} does not Exist in our Database")
-        if db_has_id(query_id, all_cafes):
-            if new_price:
-                cafe_to_update.coffee_price = new_price
-            else:
-                return jsonify({"error": "Coffee Price was not Provided"}), 400
-        db.session.commit()
-
-    except SQLAlchemyError as e:
-        return jsonify({"error": f"Database error {e} occured"}), 500
-
-    return jsonify({"success": "Price updated"}), 200
+        try:
+            cafe_to_update.coffee_price = new_price
+            db.session.commit()
+            return jsonify({"message": "Coffee price updated successfully"}), 200
+        except DataError:
+            return jsonify({"error": "Invalid data for coffee price"}), 400
+    else:
+        return jsonify({"error": "No coffee price provided"}), 400
 
 
 # HTTP DELETE - Delete Record
+@app.route("/delete-cafe/<int:cafe_id>", methods=["DELETE"])
+def delete_cafe(cafe_id):
+    cafe_to_delete = Cafe.query.get_or_404(
+        cafe_id, description=f"Cafe at ID:{cafe_id} not Found"
+    )
+    super_secret_key = "secret_key"
+    user_key = request.args.get("api_key", "")
+    breakpoint()
+    if user_key == super_secret_key:
+        try:
+            db.session.delete(cafe_to_delete)
+            db.session.commit()
+        except SQLAlchemyError as e:
+            return jsonify({"error": f"Database Error {e} Occured"}), 500
+        return jsonify({"success": f"Cafe ID:{cafe_id} Deleted"}), 200
+    else:
+        return jsonify({"error": "Incorrect API Key"}), 400
 
 
 if __name__ == "__main__":
