@@ -203,7 +203,6 @@ def update_price(cafe_id):
         return jsonify({"error": "No coffee price provided"}), 400
 
 
-# HTTP DELETE - Delete Record
 @app.route("/delete-cafe/<int:cafe_id>", methods=["DELETE"])
 def delete_cafe(cafe_id):
     cafe_to_delete = Cafe.query.get_or_404(
