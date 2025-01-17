@@ -37,7 +37,9 @@ speed = 0.5
 # - - - - - - - - - - - - - - - -
 # - - - - - - - - - - - - - - - -
 
-food_pos = pg.Vector2(random.choice(grid["x"]), random.choice(grid["y"]))
+food_pos = pg.Vector2(
+    random.choice(grid["x"]) + grid_size / 2, random.choice(grid["y"]) + grid_size / 2
+)
 head_pos = pg.Vector2(screen_width / 2, screen_height / 2)
 segment_pos = pg.Vector2(screen_width / 2 + grid_size, screen_height / 2 - grid_size)
 segments = []
@@ -60,14 +62,14 @@ while running:
             elif event.key == pg.K_w:
                 direction = (0, -grid_size)
             elif event.key == pg.K_e:
-                segment_pos = segments[-1]                 
+                segment_pos = segments[-1]
                 segments.append(segment_pos)
 
     screen.fill(black)
     # grid["x"] = horz = 16
     # grid["y"] = vert = 12
 
-    pg.draw.rect(screen, "red", (food_pos.x, food_pos.y, grid_size, grid_size))
+    pg.draw.circle(screen, "red", food_pos, grid_size / 2)
 
     for point in grid["x"]:
         #                          s x  y  e x  y
