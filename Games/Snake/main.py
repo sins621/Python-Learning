@@ -23,6 +23,7 @@ speed = 0.5
 # grid
 # (640x480)/40
 # 16x12
+
 # - - - - - - - - - - - - - - - -
 # - - - - - - - - - - - - - - - -
 # - - - - - - - - - - - - - - - -
@@ -38,8 +39,11 @@ speed = 0.5
 
 food_pos = pg.Vector2(random.choice(grid["x"]), random.choice(grid["y"]))
 head_pos = pg.Vector2(screen_width / 2, screen_height / 2)
-direction = pg.Vector2(0, 0)
+segment_pos = pg.Vector2(screen_width / 2 + grid_size, screen_height / 2 - grid_size)
+segments = []
+segments.append(segment_pos)
 
+direction = pg.Vector2(grid_size, 0)
 timer = speed
 
 while running:
@@ -55,12 +59,15 @@ while running:
                 direction = (0, grid_size)
             elif event.key == pg.K_w:
                 direction = (0, -grid_size)
+            elif event.key == pg.K_e:
+                segment_pos = segments[-1]                 
+                segments.append(segment_pos)
 
     screen.fill(black)
-    # grid[0] = horz = 16
-    # grid[1] = vert = 12
+    # grid["x"] = horz = 16
+    # grid["y"] = vert = 12
+
     pg.draw.rect(screen, "red", (food_pos.x, food_pos.y, grid_size, grid_size))
-    pg.draw.rect(screen, white, (head_pos.x, head_pos.y, grid_size, grid_size))
 
     for point in grid["x"]:
         #                          s x  y  e x  y
@@ -71,8 +78,13 @@ while running:
         pg.draw.line(screen, white, (0, point), (screen_width, point))
 
     if timer <= 0:
-        head_pos += direction
+        for i in range(len(segments) - 1, 0, -1):
+            segments[i] = segments[i - 1].copy()
+        segments[0] += direction
         timer = speed
+
+    for segment in segments:
+        pg.draw.rect(screen, white, (segment.x, segment.y, grid_size, grid_size))
 
     pg.display.flip()
     dt = clock.tick(120) / 1000
