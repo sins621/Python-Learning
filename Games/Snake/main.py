@@ -1,7 +1,6 @@
-# TODO: 1. Hit Detection
-# TODO: 2. Enlarge Snake after Eating Food
-# TODO: 3. Scoreboard
-# TODO: 4. UI
+# TODO: Collision with Self
+# TODO: Scoreboard
+# TODO: UI
 
 import random
 
@@ -17,17 +16,19 @@ clock = pg.time.Clock()
 running = True
 black = "#282828"
 white = "#ebdbb2"
-fps_font = pg.font.SysFont("Arial" , 18 , bold = True)
+fps_font = pg.font.SysFont("Arial", 18, bold=True)
 
 grid = {
     "x": [i - 1 for i in range(screen_width) if i % grid_size == 1],
     "y": [i - 1 for i in range(screen_height) if i % grid_size == 1],
 }
 
+
 def fps_counter():
     fps = str(int(clock.get_fps()))
-    fps_t = fps_font.render(fps , True, pg.Color("RED"))
-    screen.blit(fps_t,(0,0))
+    fps_t = fps_font.render(fps, True, pg.Color("RED"))
+    screen.blit(fps_t, (0, 0))
+
 
 speed = 0.5
 
@@ -62,17 +63,14 @@ while running:
         if event.type == pg.QUIT:
             running = False
         if event.type == pg.KEYDOWN:
-            if event.key == pg.K_a:
+            if event.key == pg.K_a and direction != (grid_size, 0):
                 direction = (-grid_size, 0)
-            if event.key == pg.K_d:
+            if event.key == pg.K_d and direction != (-grid_size, 0):
                 direction = (grid_size, 0)
-            if event.key == pg.K_s:
+            if event.key == pg.K_s and direction != (0, -grid_size):
                 direction = (0, grid_size)
-            if event.key == pg.K_w:
+            if event.key == pg.K_w and direction != (0, grid_size):
                 direction = (0, -grid_size)
-            if event.key == pg.K_e:
-                segment_pos = segments[-1]
-                segments.append(segment_pos)
 
     screen.fill(black)
     # grid["x"] = horz = 16
@@ -103,6 +101,10 @@ while running:
     ############################################################################
 
     for segment in segments:
+        if segment == food_pos:
+            segment_pos = segments[-1]
+            segments.append(segment_pos)
+            food_pos = pg.Vector2(random.choice(grid["x"]), random.choice(grid["y"]))
         pg.draw.rect(screen, white, (segment.x, segment.y, grid_size, grid_size))
 
     ############################################################################
