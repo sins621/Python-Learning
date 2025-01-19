@@ -36,7 +36,7 @@ db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     email: Mapped[str] = mapped_column(String(100), unique=True)
     password: Mapped[str] = mapped_column(String(100))
@@ -105,12 +105,18 @@ def register():
             email=request.form.get("email"),
         )
         # Add the user to the database
-        db.session.add(user)
-        # Commit the changes made
-        db.session.commit()
-        # Once user account created, redirect them
-        # to login route (created later on)
-        return redirect(url_for("login", name=user.name))
+        result = db.session.execute(db.select(User).order_by(User.id))
+        all_users = result.scalars().all()
+        if db_has_email(user, all_users):
+            flash("Email Already in Use")
+            redirect(url_for("register"))
+        else:
+            db.session.add(user)
+            # Commit the changes made
+            db.session.commit()
+            # Once user account created, redirect them
+            # to login route (created later on)
+            return redirect(url_for("login"))
     # Renders sign_up template if user made a GET request
     return render_template("register.html")
 
@@ -124,28 +130,31 @@ def login():
         # Check if the password entered is the
         # same as the user's password
         if user:
-            print(user.name, user.password)
-            if user.password == generate_password_hash(
-                request.form.get("password", ""), method="pbkdf2:sha256", salt_length=16
-            ):
-                # Use the login_user method to log in the user
+            if check_password_hash(
+                user.password, request.form.get("password", "")
+            ):  # Use the login_user method to log in the user
                 login_user(user)
                 return redirect(url_for("secrets"))
+            else:
+                flash("Incorrect Username or Password")
         # Redirect the user back to the home
     return render_template("login.html")
 
 
 @app.route("/secrets")
+@login_required
 def secrets():
-    return render_template("secrets.html", name=request.args.get("name"))
+    return render_template("secrets.html", name=current_user.name)
 
 
 @app.route("/logout")
 def logout():
-    return ""
+    logout_user()
+    return redirect("/")
 
 
 @app.route("/download")
+@login_required
 def download():
     print("Accessed Download")
     return send_from_directory(
