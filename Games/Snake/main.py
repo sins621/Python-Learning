@@ -17,6 +17,7 @@ running = True
 black = "#282828"
 white = "#ebdbb2"
 fps_font = pg.font.SysFont("Arial", 18, bold=True)
+can_move = False
 
 grid = {
     "x": [i - 1 for i in range(screen_width) if i % grid_size == 1],
@@ -49,11 +50,15 @@ speed = 0.5
 # - - - - - - - - - - - - - - - -
 # - - - - - - - - - - - - - - - -
 
-food_pos = pg.Vector2(random.choice(grid["x"]), random.choice(grid["y"]))
-head_pos = pg.Vector2(screen_width / 2, screen_height / 2)
-segment_pos = pg.Vector2(screen_width / 2 + grid_size, screen_height / 2 - grid_size)
+segment_rect = pg.Rect(
+    screen_width // 2 + grid_size, screen_height // 2 - grid_size, grid_size, grid_size
+)
+food_pos = (
+    random.choice(grid["x"]) + grid_size // 2,
+    random.choice(grid["y"]) + grid_size // 2,
+)
 segments = []
-segments.append(segment_pos)
+segments.append(segment_rect)
 
 direction = pg.Vector2(grid_size, 0)
 timer = speed
@@ -63,14 +68,20 @@ while running:
         if event.type == pg.QUIT:
             running = False
         if event.type == pg.KEYDOWN:
-            if event.key == pg.K_a and direction != (grid_size, 0):
+            if event.key == pg.K_ESCAPE:
+                running = False
+            if event.key == pg.K_a and direction != (grid_size, 0) and can_move:
                 direction = (-grid_size, 0)
-            if event.key == pg.K_d and direction != (-grid_size, 0):
+                can_move = False
+            if event.key == pg.K_d and direction != (-grid_size, 0 and can_move):
                 direction = (grid_size, 0)
-            if event.key == pg.K_s and direction != (0, -grid_size):
+                can_move = False
+            if event.key == pg.K_s and direction != (0, -grid_size and can_move):
                 direction = (0, grid_size)
-            if event.key == pg.K_w and direction != (0, grid_size):
+                can_move = False
+            if event.key == pg.K_w and direction != (0, grid_size) and can_move:
                 direction = (0, -grid_size)
+                can_move = False
 
     screen.fill(black)
     # grid["x"] = horz = 16
@@ -78,9 +89,6 @@ while running:
     ############################################################################
     #                             GAME LOOP HERE                               #
     ############################################################################
-    pg.draw.circle(
-        screen, "red", food_pos + (grid_size / 2, grid_size / 2), grid_size / 4
-    )
 
     # for point in grid["x"]:
     #     #                          s x  y  e x  y
@@ -96,17 +104,22 @@ while running:
     if timer <= 0:
         for i in range(len(segments) - 1, 0, -1):
             segments[i] = segments[i - 1].copy()
-        segments[0] += direction
+        segments[0].move_ip(direction)
         timer = speed
-    ############################################################################
+        can_move = True
 
+    ############################################################################
     for segment in segments:
-        if segment == food_pos:
+        if segment.center == food_pos:
             segment_pos = segments[-1]
             segments.append(segment_pos)
-            food_pos = pg.Vector2(random.choice(grid["x"]), random.choice(grid["y"]))
-        pg.draw.rect(screen, white, (segment.x, segment.y, grid_size, grid_size))
+            food_pos = (
+                random.choice(grid["x"]) + grid_size // 2,
+                random.choice(grid["y"]) + grid_size // 2,
+            )
+        pg.draw.rect(screen, white, segment)
 
+    pg.draw.circle(screen, "red", food_pos, grid_size // 4)
     ############################################################################
     # fps_counter()
     pg.display.flip()
