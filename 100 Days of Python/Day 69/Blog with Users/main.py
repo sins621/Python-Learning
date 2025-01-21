@@ -29,8 +29,6 @@ login_manager.init_app(app)
 ckeditor = CKEditor(app)
 Bootstrap5(app)
 
-# TODO: Configure Flask-Login
-
 
 # CREATE DATABASE
 class Base(DeclarativeBase):
@@ -102,9 +100,13 @@ def register():
             password=secure_password,
         )
         try:
-            db.session.add(new_user)
-            db.session.commit()
-            return redirect("/")
+            result = db.session.execute(db.select(Users))
+            users = result.scalars().all()
+            if users:
+                db.session.add(new_user)
+                db.session.commit()
+                login_user(new_user)
+                return redirect("/")
         except SQLAlchemyError as e:
             return f"Database Error: {e}"
     return render_template("register.html", form=register_form)
@@ -123,7 +125,6 @@ def login():
         try:
             result = db.session.execute(db.select(Users).where(Users.email == email))
             user = result.scalar()
-
             if user:
                 if check_password_hash(user.password, password):
                     login_user(user)
@@ -210,7 +211,6 @@ def delete_post(post_id):
     db.session.delete(post_to_delete)
     db.session.commit()
     return redirect(url_for("get_all_posts"))
-
 
 @app.route("/about")
 def about():

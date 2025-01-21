@@ -33,23 +33,6 @@ def fps_counter():
 
 speed = 0.5
 
-# grid
-# (640x480)/40
-# 16x12
-
-# - - - - - - - - - - - - - - - -
-# - - - - - - - - - - - - - - - -
-# - - - - - - - - - - - - - - - -
-# - - - - - - - - - - - - - - - -
-# - - - - - - - - - - - - - - - -
-# - - - - - - - - - - - - - - - -
-# - - - - - - - - - - - - - - - -
-# - - - - - - - - - - - - - - - -
-# - - - - - - - - - - - - - - - -
-# - - - - - - - - - - - - - - - -
-# - - - - - - - - - - - - - - - -
-# - - - - - - - - - - - - - - - -
-
 segment_rect = pg.Rect(
     screen_width // 2 + grid_size, screen_height // 2 - grid_size, grid_size, grid_size
 )
@@ -84,23 +67,6 @@ while running:
                 can_move = False
 
     screen.fill(black)
-    # grid["x"] = horz = 16
-    # grid["y"] = vert = 12
-    ############################################################################
-    #                             GAME LOOP HERE                               #
-    ############################################################################
-
-    # for point in grid["x"]:
-    #     #                          s x  y  e x  y
-    #     # pg.draw.line(screen, "#", (0, 0), (0, 0))
-    #     pg.draw.line(screen, white, (point, 0), (point, screen_height))
-    #
-    # for point in grid["y"]:
-    #     pg.draw.line(screen, white, (0, point), (screen_width, point))
-
-    ############################################################################
-    #                             MOVEMENT TICKS                               #
-    ############################################################################
     if timer <= 0:
         for i in range(len(segments) - 1, 0, -1):
             segments[i] = segments[i - 1].copy()
@@ -108,7 +74,6 @@ while running:
         timer = speed
         can_move = True
 
-    ############################################################################
     for segment in segments:
         if segment.center == food_pos:
             segment_pos = segments[-1]
@@ -120,7 +85,6 @@ while running:
         pg.draw.rect(screen, white, segment)
 
     pg.draw.circle(screen, "red", food_pos, grid_size // 4)
-    ############################################################################
     # fps_counter()
     pg.display.flip()
     dt = clock.tick(120) / 1000
