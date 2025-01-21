@@ -60,7 +60,6 @@ class BlogPost(db.Model):
         self.img_url = img_url
 
 
-# TODO: Create a User table for all your registered users.
 class Users(UserMixin, db.Model):
     __tablename__ = "users"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -83,7 +82,6 @@ with app.app_context():
     db.create_all()
 
 
-# TODO: Use Werkzeug to hash the user's password when creating a new user.
 @app.route("/register", methods=["GET", "POST"])
 def register():
     register_form = CreateRegisterForm()
@@ -100,9 +98,14 @@ def register():
             password=secure_password,
         )
         try:
-            result = db.session.execute(db.select(Users))
-            users = result.scalars().all()
-            if users:
+            result = db.session.execute(
+                db.select(Users).where(Users.email == new_user.email)
+            )
+            user = result.scalar()
+            if user:
+                flash("Email Already in Use")
+                redirect("url_for('register')")
+            else:
                 db.session.add(new_user)
                 db.session.commit()
                 login_user(new_user)
@@ -112,7 +115,6 @@ def register():
     return render_template("register.html", form=register_form)
 
 
-# TODO: Retrieve a user from the database based on their email.
 @app.route("/login", methods=["GET", "POST"])
 def login():
     login_form = CreateLoginForm()
@@ -211,6 +213,7 @@ def delete_post(post_id):
     db.session.delete(post_to_delete)
     db.session.commit()
     return redirect(url_for("get_all_posts"))
+
 
 @app.route("/about")
 def about():
