@@ -1,0 +1,13 @@
+Label {
+    border: solid $primary;
+    border-title-align: left;
+}
+
+
+
+
+Screen > Label {
+    width: 100%;
+    height: 1fr;
+    content-align: center middle;
+}
