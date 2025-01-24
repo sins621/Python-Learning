@@ -1,23 +1,33 @@
-from textual.app import App
-from textual.widgets import Label, SelectionList
+from textual.app import App, ComposeResult, RenderResult
+from textual.binding import Binding
+from textual.containers import Container
+from textual.widget import Widget
 
 
-class BorderTitleAlignApp(App):
+class Hello(Widget):
+    """Display a greeting."""
+
+    def render(self) -> RenderResult:
+        return "Hello, [b]World[/b]!"
+
+
+class PomodoroApp(App):
     CSS_PATH = "styles.tcss"
+    BINDINGS = [Binding("ctrl+c", "quit", "Quit", show=False, priority=True)]
 
     def on_mount(self) -> None:
         self.theme = "gruvbox"
 
-    def compose(self):
-        lbl = Label("My title is on the left.")
-        lbl.border_title = "Focus"
-        yield lbl
+    def compose(self) -> ComposeResult:
+        timer = Container(Hello())
+        timer.border_title = "Timer"
+        yield timer
 
-        sel = SelectionList()
-        lbl.border_title = "Tasks"
-        yield lbl
+        tasks = Container(Hello())
+        tasks.border_title = "Timer"
+        yield tasks
 
 
 if __name__ == "__main__":
-    app = BorderTitleAlignApp()
+    app = PomodoroApp()
     app.run()
