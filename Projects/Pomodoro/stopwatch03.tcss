@@ -1,17 +1,3 @@
-Stopwatch{
-    border: solid $accent;
-}
-
-TimeDisplay {
-   text-align: center;
-}
-
-Button {
-    width: 10;
-    height: 5;
-    margin-left: 25%;
-}
-
 #start {
 }
 
