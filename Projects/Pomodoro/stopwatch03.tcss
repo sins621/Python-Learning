@@ -1,0 +1,36 @@
+Stopwatch{
+    border: solid $accent;
+}
+
+TimeDisplay {
+   text-align: center;
+}
+
+Button {
+    width: 10;
+    height: 5;
+    margin-left: 25%;
+}
+
+#start {
+}
+
+#stop {
+    display: none;
+}
+
+.started {
+    color: $text;
+}
+
+.started TimeDisplay {
+}
+
+.started #start {
+    display: none
+}
+
+.started #stop {
+    display: block
+}
+
