@@ -24,14 +24,12 @@ class WeatherApp(App):
         """Update the weather for the given city."""
         weather_widget = self.query_one("#weather", Static)
         if city:
-            # Query the network API
             url = f"https://wttr.in/{city}"
             async with httpx.AsyncClient() as client:
                 response = await client.get(url)
                 weather = Text.from_ansi(response.text)
                 weather_widget.update(weather)
         else:
-            # No city, so just blank out the weather
             weather_widget.update("")
 
 

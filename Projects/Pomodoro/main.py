@@ -7,7 +7,7 @@ from textual.widgets import Button, Digits
 class TimeDisplay(Digits):
     """A Widget to display elapsed time."""
 
-    time = reactive(300)
+    time = reactive(40*60)
 
     def on_mount(self, time):
         self.update_timer = self.set_interval(1, self.update_time, pause=True)
