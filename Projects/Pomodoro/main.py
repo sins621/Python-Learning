@@ -22,6 +22,7 @@ class TimeDisplay(Digits):
 
     def start(self):
         self.update_timer.resume()
+        # update
 
     def stop(self):
         self.update_timer.pause()
