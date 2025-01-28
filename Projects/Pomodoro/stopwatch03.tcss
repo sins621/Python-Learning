@@ -1,0 +1,27 @@
+TabbedContent{
+    border: solid $accent;
+}
+
+#start {
+}
+
+#stop {
+    display: none;
+}
+
+
+.started {
+    color: $text;
+}
+
+.started TimeDisplay {
+}
+
+.started #start {
+    display: none
+}
+
+.started #stop {
+    display: block
+}
+
