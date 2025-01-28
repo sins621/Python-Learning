@@ -1,7 +1,6 @@
 from textual.app import App, ComposeResult
-from textual.containers import Container
 from textual.reactive import reactive
-from textual.widgets import Button, Digits
+from textual.widgets import Button, Digits, TabbedContent, TabPane
 
 
 class TimeDisplay(Digits):
@@ -27,7 +26,10 @@ class TimeDisplay(Digits):
         self.time = 40
 
 
-class Stopwatch(Container):
+class Stopwatch(TabPane):
+    def __init__(self, title):
+        super().__init__(title=title)
+
     def on_button_pressed(self, event: Button.Pressed) -> None:
         button_id = event.button.id
         time_display = self.query_one(TimeDisplay)
@@ -52,7 +54,10 @@ class Pomodoro(App):
         self.theme = "gruvbox"
 
     def compose(self) -> ComposeResult:
-        yield Stopwatch()
+        with TabbedContent():
+            yield Stopwatch("Pane1")
+            yield Stopwatch("Pane2")
+            yield Stopwatch("Pane3")
 
     def action_toggle_dark(self) -> None:
         self.theme = (
