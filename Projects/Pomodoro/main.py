@@ -1,33 +1,24 @@
-from textual.app import App, ComposeResult, RenderResult
-from textual.binding import Binding
-from textual.containers import Container
-from textual.widget import Widget
+from textual.app import App, ComposeResult
+from textual.widgets import Footer, Header
 
 
-class Hello(Widget):
-    """Display a greeting."""
+class StopwatchApp(App):
+    """A Textual app to manage stopwatches."""
 
-    def render(self) -> RenderResult:
-        return "Hello, [b]World[/b]!"
-
-
-class PomodoroApp(App):
-    CSS_PATH = "styles.tcss"
-    BINDINGS = [Binding("ctrl+c", "quit", "Quit", show=False, priority=True)]
-
-    def on_mount(self) -> None:
-        self.theme = "gruvbox"
+    BINDINGS = [("d", "toggle_dark", "Toggle dark mode")]
 
     def compose(self) -> ComposeResult:
-        timer = Container(Hello())
-        timer.border_title = "Timer"
-        yield timer
+        """Create child widgets for the app."""
+        yield Header()
+        yield Footer()
 
-        tasks = Container(Hello())
-        tasks.border_title = "Timer"
-        yield tasks
+    def action_toggle_dark(self) -> None:
+        """An action to toggle dark mode."""
+        self.theme = (
+            "textual-dark" if self.theme == "textual-light" else "textual-light"
+        )
 
 
 if __name__ == "__main__":
-    app = PomodoroApp()
+    app = StopwatchApp()
     app.run()
