@@ -48,21 +48,15 @@ class Stopwatch(TabPane):
 
 class Pomodoro(App):
     CSS_PATH = "stopwatch03.tcss"
-    BINDINGS = [("d", "toggle_dark", "Toggle dark mode")]
 
     def on_mount(self) -> None:
         self.theme = "gruvbox"
 
     def compose(self) -> ComposeResult:
         with TabbedContent():
-            yield Stopwatch("Pane1")
-            yield Stopwatch("Pane2")
-            yield Stopwatch("Pane3")
-
-    def action_toggle_dark(self) -> None:
-        self.theme = (
-            "textual-dark" if self.theme == "textual-light" else "textual-light"
-        )
+            yield Stopwatch("Focus")
+            yield Stopwatch("Short Break")
+            yield Stopwatch("Long Break")
 
 
 if __name__ == "__main__":

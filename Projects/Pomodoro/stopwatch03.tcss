@@ -1,9 +1,14 @@
+TabbedContent{
+    border: solid $accent;
+}
+
 #start {
 }
 
 #stop {
     display: none;
 }
+
 
 .started {
     color: $text;
